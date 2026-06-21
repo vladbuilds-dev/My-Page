@@ -508,6 +508,58 @@
       box-shadow: 0 12px 30px rgba(249,115,22,.22); }
     .ghbtn:hover .gh-content { color: var(--accent); }
     .ghbtn .gh-ico { width: 20px; height: 20px; }
+
+    /* ================= Scroll-expand интро (порт 21st.dev) ================= */
+    .nav { transition: background .3s ease, border-color .3s ease, opacity .45s ease; }
+    #scroll-progress { transition: width .12s linear, opacity .45s ease; }
+    body.intro .nav, body.intro #scroll-progress { opacity: 0; pointer-events: none; }
+
+    #expand-hero { position: relative; width: 100%; overflow: hidden; }
+    .xh-bg { position: absolute; inset: 0; z-index: 0; will-change: opacity;
+      background:
+        radial-gradient(1200px 720px at 50% 28%, rgba(249,115,22,.24), transparent 60%),
+        radial-gradient(900px 600px at 82% 82%, rgba(245,158,11,.15), transparent 60%),
+        var(--bg2); }
+    .xh-grid { position: absolute; inset: 0; z-index: 1; opacity: .6;
+      background-image:
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, #000 25%, transparent 78%);
+      mask-image: radial-gradient(ellipse 70% 60% at center, #000 25%, transparent 78%); }
+    .xh-center { position: relative; z-index: 2; width: 100%; min-height: 100dvh;
+      display: flex; align-items: center; justify-content: center; }
+    .xh-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 1;
+      border-radius: 18px; overflow: hidden; max-width: 95vw; max-height: 85vh;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px var(--line); }
+    .xh-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .xh-veil { position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(11,14,19,.25), rgba(11,14,19,.6)); }
+    .xh-cap { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+    .xh-cap .xh-date { font-family: var(--display); font-size: clamp(13px, 2.2vw, 18px);
+      letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+    .xh-cap .xh-hint { font-size: 11.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted);
+      display: inline-flex; align-items: center; gap: 9px; }
+    .xh-cap .xh-hint svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none;
+      stroke-linecap: round; stroke-linejoin: round; animation: xhBob 1.6s ease-in-out infinite; }
+    @keyframes xhBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+    .xh-title { position: relative; z-index: 3; pointer-events: none; mix-blend-mode: difference;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+    .xh-title span { font-family: var(--display); font-weight: 700; letter-spacing: -.02em; line-height: 1;
+      font-size: clamp(40px, 9vw, 94px); color: #fff; white-space: nowrap; }
+    .xh-content { position: relative; z-index: 3; width: 100%; max-width: 720px; margin: 0 auto;
+      padding: 56px 24px 96px; text-align: center; opacity: 0; transition: opacity .7s ease; }
+    .xh-content.show { opacity: 1; }
+    .xh-content h3 { font-family: var(--display); font-size: clamp(22px, 4vw, 34px); font-weight: 700; letter-spacing: -.01em; }
+    .xh-content p { color: var(--muted); margin-top: 14px; }
+    .xh-down { margin-top: 30px; display: inline-flex; flex-direction: column; align-items: center; gap: 9px;
+      font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
+    .xh-down::after { content: ''; width: 1px; height: 26px; background: linear-gradient(var(--accent), transparent); }
+    @media (prefers-reduced-motion: reduce) {
+      .xh-content { opacity: 1; transition: none; }
+      .xh-cap .xh-hint svg { animation: none; }
+    }
   </style>
 </head>
 <body>
@@ -517,6 +569,34 @@
     <div class="flux-label-wrap"><div class="flux-label show" id="flux-label">запуск</div></div>
     <div class="flux-track"><div class="flux-fill" id="flux-fill"><span class="flux-sheen"></span></div></div>
   </div>
+
+  <!-- ===== Scroll-expand интро ===== -->
+  <section id="expand-hero" aria-label="Интро">
+    <div class="xh-bg" id="xh-bg"></div>
+    <div class="xh-grid" aria-hidden="true"></div>
+    <div class="xh-center">
+      <div class="xh-media" id="xh-media">
+        <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1280&q=80"
+             alt="Кейс крупным планом" onerror="this.style.display='none'" />
+        <div class="xh-veil"></div>
+        <div class="xh-cap">
+          <span class="xh-date">Влад · веб-разработчик</span>
+          <span class="xh-hint">Листайте, чтобы войти
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+          </span>
+        </div>
+      </div>
+      <h2 class="xh-title">
+        <span id="xh-w1">Цифровая</span>
+        <span id="xh-w2">мастерская</span>
+      </h2>
+    </div>
+    <div class="xh-content" id="xh-content">
+      <h3>От идеи до запуска</h3>
+      <p>Лендинги, интернет-магазины и веб-сервисы под ключ. Чисто, быстро и под твой бренд — без шаблонов из конструктора.</p>
+      <span class="xh-down">Знакомьтесь ниже</span>
+    </div>
+  </section>
 
   <!-- ===== Прогресс прокрутки + навигация ===== -->
   <div id="scroll-progress" aria-hidden="true"></div>
@@ -1280,6 +1360,101 @@
         });
       }, { threshold: 0.12 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // ===== Scroll-expand интро (порт ScrollExpandMedia на ваниль) =====
+    (function () {
+      var root = document.getElementById('expand-hero');
+      if (!root) return;
+      var media = document.getElementById('xh-media');
+      var bg = document.getElementById('xh-bg');
+      var w1 = document.getElementById('xh-w1');
+      var w2 = document.getElementById('xh-w2');
+      var content = document.getElementById('xh-content');
+
+      var progress = 0, expanded = false, touchY = 0;
+      var mobile = window.innerWidth < 768;
+
+      function apply() {
+        var mw = 300 + progress * (mobile ? 650 : 1250);
+        var mh = 400 + progress * (mobile ? 200 : 400);
+        var tx = progress * (mobile ? 180 : 150);
+        media.style.width = mw + 'px';
+        media.style.height = mh + 'px';
+        bg.style.opacity = String(1 - progress);
+        w1.style.transform = 'translateX(-' + tx + 'vw)';
+        w2.style.transform = 'translateX(' + tx + 'vw)';
+      }
+      function setProgress(v) {
+        progress = Math.min(Math.max(v, 0), 1);
+        apply();
+        if (progress >= 1) expand();
+        else if (progress < 0.75) content.classList.remove('show');
+      }
+      function expand() {
+        if (expanded) return;
+        expanded = true;
+        document.body.classList.remove('intro');
+        document.body.style.overflow = '';
+        root.style.cursor = '';
+        content.classList.add('show');
+      }
+      function collapse() {
+        expanded = false;
+        document.body.classList.add('intro');
+        document.body.style.overflow = 'hidden';
+        root.style.cursor = 'pointer';
+        progress = 0; apply();
+        content.classList.remove('show');
+      }
+
+      // prefers-reduced-motion: без перехвата скролла — статичный экран
+      if (REDUCED) { apply(); content.classList.add('show'); return; }
+
+      document.body.classList.add('intro');
+      document.body.style.overflow = 'hidden';
+      apply();
+
+      function onWheel(e) {
+        if (expanded && e.deltaY < 0 && window.scrollY <= 5) { collapse(); e.preventDefault(); return; }
+        if (!expanded) { e.preventDefault(); setProgress(progress + e.deltaY * 0.0009); }
+      }
+      function onTouchStart(e) { touchY = e.touches[0].clientY; }
+      function onTouchMove(e) {
+        if (!touchY) return;
+        var ty = e.touches[0].clientY, dy = touchY - ty;
+        if (expanded && dy < -20 && window.scrollY <= 5) { collapse(); e.preventDefault(); return; }
+        if (!expanded) {
+          e.preventDefault();
+          var f = dy < 0 ? 0.008 : 0.005;
+          setProgress(progress + dy * f);
+          touchY = ty;
+        }
+      }
+      function onTouchEnd() { touchY = 0; }
+      function onScroll() { if (!expanded) window.scrollTo(0, 0); }
+      function onResize() { mobile = window.innerWidth < 768; apply(); }
+      // Доступность: клавиатура и клик как альтернатива колесу/свайпу
+      function onKey(e) {
+        if (expanded) {
+          if ((e.key === 'ArrowUp' || e.key === 'PageUp') && window.scrollY <= 5) { collapse(); e.preventDefault(); }
+          return;
+        }
+        if (['ArrowDown', 'PageDown', ' ', 'Spacebar', 'Enter'].indexOf(e.key) !== -1) {
+          e.preventDefault(); setProgress(progress + 0.34);
+        }
+      }
+      function onClick() { if (!expanded) setProgress(progress + 0.34); }
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+      window.addEventListener('scroll', onScroll);
+      window.addEventListener('touchstart', onTouchStart, { passive: false });
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('touchend', onTouchEnd);
+      window.addEventListener('resize', onResize);
+      window.addEventListener('keydown', onKey);
+      root.addEventListener('click', onClick);
+      root.style.cursor = 'pointer';
     })();
   </script>
 </body>
