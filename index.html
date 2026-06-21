@@ -372,41 +372,6 @@
     .cta-inner p { color: var(--muted); max-width: 460px; margin: 14px auto 0; }
     .cta-inner .btns { justify-content: center; }
 
-    /* ===== Intro flux-лоадер ===== */
-    #flux-loader {
-      position: fixed; inset: 0; z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
-      background:
-        radial-gradient(900px 500px at 50% 30%, rgba(29,111,251,.10), transparent 60%),
-        var(--bg2);
-      transition: opacity .5s ease, visibility .5s ease;
-    }
-    #flux-loader.done { opacity: 0; visibility: hidden; }
-    .flux-label-wrap { position: relative; height: 54px; width: min(420px, 86vw); }
-    .flux-label {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      font-size: clamp(22px, 5vw, 34px); font-weight: 700; letter-spacing: -.01em; color: var(--muted);
-      opacity: 0; transform: translateY(14px) scale(.72); filter: blur(12px);
-      transition: opacity .4s ease, transform .45s cubic-bezier(.22,1,.36,1), filter .4s ease;
-    }
-    .flux-label.show { opacity: 1; transform: none; filter: none; }
-    .flux-track {
-      position: relative; height: 18px; width: min(420px, 86vw); border-radius: 999px; overflow: hidden;
-      background: #11161d; box-shadow: inset 0 2px 3px rgba(0,0,0,.45), inset 0 -1px 2px rgba(255,255,255,.05);
-    }
-    .flux-fill {
-      position: relative; height: 100%; width: 0%; border-radius: 999px;
-      background: linear-gradient(90deg, #1d6ffb 0%, #48a8fb 35%, #74e1ff 55%, #48a8fb 78%, #1d6ffb 100%);
-      box-shadow: 0 0 18px rgba(29,111,251,.55), 0 0 32px rgba(116,225,255,.4),
-                  inset 0 1.5px 0 rgba(255,255,255,.5), inset 0 -2px 3px rgba(0,40,120,.35);
-    }
-    .flux-sheen {
-      position: absolute; top: 0; bottom: 0; left: 0; width: 50%; border-radius: 999px; mix-blend-mode: screen;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.55) 50%, transparent 100%);
-      animation: fluxSheen 1.1s linear infinite;
-    }
-    @keyframes fluxSheen { from { transform: translateX(-110%); } to { transform: translateX(310%); } }
-
     /* ===== Появление при скролле ===== */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.in { opacity: 1; transform: none; }
@@ -422,10 +387,8 @@
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; transition: none; }
       .kicker .dot { animation: none; }
-      .flux-sheen { animation: none; }
       .fall-layer { animation: none; }
       .hero-type .caret { animation: none; }
-      #flux-loader { transition: opacity .2s ease; }
       .nav, .nav-inner, .nav-links a::after, .nav-cta { transition: none; }
     }
 
@@ -487,13 +450,6 @@
     .hstat + .hstat::before { content: ''; position: absolute; left: -19px; top: 3px; bottom: 3px;
       width: 1px; background: var(--line); }
     @media (max-width: 520px) { .hero-stats { gap: 24px; } .hstat + .hstat::before { left: -12px; } }
-
-    /* Единый бренд: тёплый лоадер вместо холодного синего */
-    #flux-loader { background:
-      radial-gradient(900px 500px at 50% 30%, rgba(249,115,22,.12), transparent 60%), var(--bg2); }
-    .flux-fill { background: linear-gradient(90deg, #b45309 0%, #f59e0b 35%, #fdba74 55%, #f59e0b 78%, #f97316 100%);
-      box-shadow: 0 0 18px rgba(249,115,22,.55), 0 0 32px rgba(245,158,11,.4),
-        inset 0 1.5px 0 rgba(255,255,255,.5), inset 0 -2px 3px rgba(120,60,0,.35); }
 
     /* Единый бренд: ядро орбиты в тёплых тонах */
     .orbit-center { background: linear-gradient(135deg, #f97316, #f59e0b, #fdba74); }
@@ -560,15 +516,32 @@
       .xh-content { opacity: 1; transition: none; }
       .xh-cap .xh-hint svg { animation: none; }
     }
+
+    /* Скролл-навигация: активный раздел */
+    .nav-links a.active { color: var(--text); }
+    .nav-links a.active::after { right: 0; }
+
+    /* Подвал */
+    footer { border-top: 1px solid var(--line); padding: 56px 0 34px; color: var(--muted); font-size: 14px; }
+    .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1.2fr; gap: 32px; align-items: start; }
+    .foot-brand p { margin-top: 14px; max-width: 320px; line-height: 1.6; }
+    .foot-brand .brand { margin-bottom: 2px; }
+    .foot-col { display: flex; flex-direction: column; gap: 11px; }
+    .foot-h { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--text); margin-bottom: 3px; }
+    .foot-col a { color: var(--muted); text-decoration: none; transition: color .15s ease; width: fit-content; }
+    .foot-col a:hover { color: var(--accent); }
+    .foot-cta { margin-top: 6px; font-weight: 700; color: var(--accent) !important; }
+    .foot-bottom { display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; }
+    .foot-top { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .foot-top:hover { color: var(--accent); }
+    @media (max-width: 720px) {
+      .foot-grid { grid-template-columns: 1fr; gap: 30px; }
+      .foot-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
   </style>
 </head>
 <body>
-
-  <!-- ===== Intro flux-лоадер (показывается ~1 сек на загрузке) ===== -->
-  <div id="flux-loader" role="progressbar" aria-label="Загрузка" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-    <div class="flux-label-wrap"><div class="flux-label show" id="flux-label">запуск</div></div>
-    <div class="flux-track"><div class="flux-fill" id="flux-fill"><span class="flux-sheen"></span></div></div>
-  </div>
 
   <!-- ===== Scroll-expand интро ===== -->
   <section id="expand-hero" aria-label="Интро">
@@ -655,26 +628,6 @@
   </div>
 
   <div class="wrap">
-
-    <!-- ===== Interactive 3D (Spline) ===== -->
-    <section class="reveal">
-      <div class="spline-card">
-        <svg class="spotlight" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <ellipse cx="200" cy="200" rx="200" ry="80" fill="white" fill-opacity="0.5" />
-        </svg>
-        <div class="spline-text">
-          <h3>Interactive 3D</h3>
-          <p>Оживляю интерфейсы трёхмерными сценами и анимацией. Такие детали удерживают внимание и выделяют сайт среди шаблонных решений.</p>
-          <div class="btns">
-            <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label">Хочу так же</span></a>
-          </div>
-        </div>
-        <div class="spline-holder">
-          <div class="spline-fallback">[ 3D-сцена загружается ]</div>
-          <spline-viewer url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"></spline-viewer>
-        </div>
-      </div>
-    </section>
 
     <!-- ===== Что я делаю — bento ===== -->
     <section class="reveal" id="services">
@@ -847,6 +800,26 @@
       <div class="cdots" id="cdots"></div>
     </section>
 
+    <!-- ===== Interactive 3D (Spline) — флёр возможностей ===== -->
+    <section class="reveal">
+      <div class="spline-card">
+        <svg class="spotlight" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <ellipse cx="200" cy="200" rx="200" ry="80" fill="white" fill-opacity="0.5" />
+        </svg>
+        <div class="spline-text">
+          <h3>И не только сайты</h3>
+          <p>Оживляю интерфейсы трёхмерными сценами и анимацией. Такие детали удерживают внимание и выделяют проект среди шаблонных решений.</p>
+          <div class="btns">
+            <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label">Хочу так же</span></a>
+          </div>
+        </div>
+        <div class="spline-holder">
+          <div class="spline-fallback">[ 3D-сцена загружается ]</div>
+          <spline-viewer url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"></spline-viewer>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Отзывы — shuffle-колода ===== -->
     <section class="reveal" id="otzyvy">
       <div class="section-head">
@@ -887,7 +860,32 @@
 
   <div class="wrap">
     <footer>
-      © <span id="year"></span> Влад · Сделано вручную
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="#" aria-label="Влад — наверх">
+            <span class="mono">В</span>
+            <span>Влад</span>
+          </a>
+          <p>Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.</p>
+        </div>
+        <nav class="foot-col" aria-label="Разделы">
+          <span class="foot-h">Разделы</span>
+          <a href="#services">Услуги</a>
+          <a href="#process">Процесс</a>
+          <a href="#cases">Кейсы</a>
+          <a href="#otzyvy">Отзывы</a>
+        </nav>
+        <div class="foot-col">
+          <span class="foot-h">Контакты</span>
+          <a href="mailto:abramov.vladislaw@gmail.com">abramov.vladislaw@gmail.com</a>
+          <a href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener">GitHub</a>
+          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com">Обсудить проект →</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> Влад · Сделано вручную</span>
+        <a href="#" class="foot-top">Наверх ↑</a>
+      </div>
     </footer>
   </div>
 
@@ -930,49 +928,22 @@
       onScroll();
     })();
 
-    // ===== Intro flux-лоадер =====
+    // ===== Подсветка активного раздела в навигации =====
     (function () {
-      var loader = document.getElementById('flux-loader');
-      var fill = document.getElementById('flux-fill');
-      var labelEl = document.getElementById('flux-label');
-      if (!loader || !fill || !labelEl) return;
-
-      document.body.style.overflow = 'hidden';
-      var phases = [
-        { at: 0,  label: 'запуск' },
-        { at: 45, label: 'грузим ассеты' },
-        { at: 80, label: 'почти готово' },
-        { at: 100, label: 'готово' }
-      ];
-      var duration = REDUCED ? 250 : 1100;
-      var start = null, last = 'запуск';
-
-      function setLabel(pct) {
-        var l = phases[0].label;
-        for (var i = 0; i < phases.length; i++) { if (pct >= phases[i].at) l = phases[i].label; }
-        if (l !== last) {
-          last = l;
-          labelEl.classList.remove('show');
-          void labelEl.offsetWidth;
-          labelEl.textContent = l;
-          labelEl.classList.add('show');
-        }
-      }
-      function finish() {
-        loader.classList.add('done');
-        document.body.style.overflow = '';
-        setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 600);
-      }
-      function tick(ts) {
-        if (start === null) start = ts;
-        var pct = Math.min(100, ((ts - start) / duration) * 100);
-        fill.style.width = pct + '%';
-        loader.setAttribute('aria-valuenow', Math.round(pct));
-        setLabel(pct);
-        if (pct >= 100) { setTimeout(finish, REDUCED ? 0 : 180); return; }
-        requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
+      if (!('IntersectionObserver' in window)) return;
+      var ids = ['services', 'process', 'cases', 'otzyvy'];
+      var links = {};
+      ids.forEach(function (id) { links[id] = document.querySelector('.nav-links a[href="#' + id + '"]'); });
+      var secs = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+      if (!secs.length) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            ids.forEach(function (id) { if (links[id]) links[id].classList.toggle('active', id === e.target.id); });
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+      secs.forEach(function (s) { io.observe(s); });
     })();
 
     // ===== Typewriter в герое =====
