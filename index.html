@@ -426,7 +426,88 @@
       .fall-layer { animation: none; }
       .hero-type .caret { animation: none; }
       #flux-loader { transition: opacity .2s ease; }
+      .nav, .nav-inner, .nav-links a::after, .nav-cta { transition: none; }
     }
+
+    /* ================= ПОЛИРОВКА: единый бренд + командная панель ================= */
+    /* Доступный фокус на всех интерактивных элементах */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px;
+    }
+
+    /* Верхняя полоса прогресса прокрутки */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 1000;
+      background: var(--grad); box-shadow: 0 0 12px rgba(249,115,22,.7);
+      transition: width .12s linear;
+    }
+
+    /* Навигация (стеклянная командная панель) */
+    .nav { position: fixed; inset: 0 0 auto 0; z-index: 900;
+      border-bottom: 1px solid transparent; transition: background .3s ease, border-color .3s ease; }
+    .nav.scrolled { background: rgba(11,14,19,.72);
+      -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+      border-bottom-color: var(--line); }
+    .nav-inner { max-width: 980px; margin: 0 auto; padding: 18px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      transition: padding .3s ease; }
+    .nav.scrolled .nav-inner { padding-top: 12px; padding-bottom: 12px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none;
+      font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.01em; color: var(--text); }
+    .brand .mono { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--grad); color: #0b0e13; font-weight: 800; font-size: 16px;
+      box-shadow: 0 6px 18px rgba(249,115,22,.34); }
+    .brand .mono-sub { color: var(--muted); font-weight: 600; font-size: 12.5px;
+      font-family: 'Manrope', sans-serif; letter-spacing: .01em; }
+    .nav-links { display: flex; gap: 30px; }
+    .nav-links a { position: relative; color: var(--muted); text-decoration: none; font-size: 14px;
+      font-weight: 600; padding: 4px 0; transition: color .15s ease; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px;
+      border-radius: 2px; background: var(--grad); transition: right .25s ease; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { right: 0; }
+    .nav-cta { display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+      font-weight: 700; font-size: 14px; color: #0b0e13; background: var(--grad);
+      padding: 9px 18px; border-radius: 10px; box-shadow: 0 8px 22px rgba(249,115,22,.28);
+      transition: transform .15s ease, box-shadow .2s ease; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(249,115,22,.4); }
+    @media (max-width: 760px) { .nav-links { display: none; } .nav-inner { padding: 14px 20px; } }
+    @media (max-width: 520px) { .brand .mono-sub { display: none; } }
+
+    /* Якоря не уходят под фиксированную панель */
+    #services, #process, #cases, #otzyvy { scroll-margin-top: 88px; }
+
+    /* Доказательства в герое */
+    .hero-stats { display: flex; gap: 38px; margin-top: 44px; flex-wrap: wrap; }
+    .hstat { display: flex; flex-direction: column; gap: 3px; position: relative; }
+    .hstat b { font-family: var(--display); font-size: clamp(23px, 3.4vw, 30px); font-weight: 700;
+      font-variant-numeric: tabular-nums; line-height: 1;
+      background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hstat span { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .hstat + .hstat::before { content: ''; position: absolute; left: -19px; top: 3px; bottom: 3px;
+      width: 1px; background: var(--line); }
+    @media (max-width: 520px) { .hero-stats { gap: 24px; } .hstat + .hstat::before { left: -12px; } }
+
+    /* Единый бренд: тёплый лоадер вместо холодного синего */
+    #flux-loader { background:
+      radial-gradient(900px 500px at 50% 30%, rgba(249,115,22,.12), transparent 60%), var(--bg2); }
+    .flux-fill { background: linear-gradient(90deg, #b45309 0%, #f59e0b 35%, #fdba74 55%, #f59e0b 78%, #f97316 100%);
+      box-shadow: 0 0 18px rgba(249,115,22,.55), 0 0 32px rgba(245,158,11,.4),
+        inset 0 1.5px 0 rgba(255,255,255,.5), inset 0 -2px 3px rgba(120,60,0,.35); }
+
+    /* Единый бренд: ядро орбиты в тёплых тонах */
+    .orbit-center { background: linear-gradient(135deg, #f97316, #f59e0b, #fdba74); }
+
+    /* Единый бренд: GitHub-кнопка из синей в фирменную (перекрывает прежний стиль) */
+    .ghbtn { border: 1px solid var(--line); background: rgba(22,27,34,.55);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      color: var(--text); font-weight: 700; font-size: 16px; }
+    .ghbtn .gh-liquid { opacity: 0; }
+    .ghbtn::before { display: none; }
+    .ghbtn:hover { transform: translateY(-2px); border-color: rgba(249,115,22,.5);
+      box-shadow: 0 12px 30px rgba(249,115,22,.22); }
+    .ghbtn:hover .gh-content { color: var(--accent); }
+    .ghbtn .gh-ico { width: 20px; height: 20px; }
   </style>
 </head>
 <body>
@@ -436,6 +517,24 @@
     <div class="flux-label-wrap"><div class="flux-label show" id="flux-label">запуск</div></div>
     <div class="flux-track"><div class="flux-fill" id="flux-fill"><span class="flux-sheen"></span></div></div>
   </div>
+
+  <!-- ===== Прогресс прокрутки + навигация ===== -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <nav class="nav" id="nav" aria-label="Главное меню">
+    <div class="nav-inner">
+      <a class="brand" href="#" aria-label="Влад — наверх">
+        <span class="mono">В</span>
+        <span>Влад<span class="mono-sub"> · веб-разработчик</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#services">Услуги</a>
+        <a href="#process">Процесс</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#otzyvy">Отзывы</a>
+      </div>
+      <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com">Написать</a>
+    </div>
+  </nav>
 
   <!-- ===== HERO (про Влада) с шейдером на фоне ===== -->
   <header class="hero">
@@ -451,10 +550,15 @@
         <a class="ghbtn" href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener" aria-label="GitHub">
           <span class="gh-liquid"></span>
           <span class="gh-content">
-            <svg class="gh-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Github
+            <svg class="gh-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+            GitHub
           </span>
         </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><b>3–7 дней</b><span>срок запуска</span></div>
+        <div class="hstat"><b>100%</b><span>адаптив</span></div>
+        <div class="hstat"><b>&lt;1 сек</b><span>загрузка</span></div>
       </div>
     </div>
     <div class="scroll-hint">Листайте</div>
@@ -493,7 +597,7 @@
     </section>
 
     <!-- ===== Что я делаю — bento ===== -->
-    <section class="reveal">
+    <section class="reveal" id="services">
       <div class="section-head">
         <div class="section-title">Что я делаю</div>
         <h2>Услуги</h2>
@@ -542,7 +646,7 @@
     </section>
 
     <!-- ===== Как я работаю — орбитальный таймлайн ===== -->
-    <section class="reveal">
+    <section class="reveal" id="process">
       <div class="section-head">
         <div class="section-title">Процесс</div>
         <h2>Как я работаю</h2>
@@ -588,7 +692,7 @@
     </section>
 
     <!-- ===== Примеры работ ===== -->
-    <section class="reveal">
+    <section class="reveal" id="cases">
       <div class="section-head">
         <div class="section-title">Примеры работ</div>
         <h2>Кейсы</h2>
@@ -693,8 +797,8 @@
         <a class="ghbtn" href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener" aria-label="GitHub">
           <span class="gh-liquid"></span>
           <span class="gh-content">
-            <svg class="gh-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Github
+            <svg class="gh-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.1-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 2.9-.39c.98 0 1.97.13 2.9.39 2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+            GitHub
           </span>
         </a>
       </div>
@@ -728,6 +832,23 @@
 
     // Год в подвале
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Навигация: фон при прокрутке + прогресс-бар =====
+    (function () {
+      var nav = document.getElementById('nav');
+      var bar = document.getElementById('scroll-progress');
+      function onScroll() {
+        var y = window.scrollY || window.pageYOffset || 0;
+        if (nav) nav.classList.toggle('scrolled', y > 24);
+        if (bar) {
+          var h = document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+    })();
 
     // ===== Intro flux-лоадер =====
     (function () {
@@ -812,13 +933,15 @@
         '  vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);',
         '  float t = time*0.05;',
         '  float lineWidth = 0.002;',
-        '  vec3 color = vec3(0.0);',
+        '  float v = 0.0;',
         '  for(int j = 0; j < 3; j++){',
         '    for(int i=0; i < 5; i++){',
-        '      color[j] += lineWidth*float(i*i) / abs(fract(t - 0.01*float(j)+float(i)*0.01)*5.0 - length(uv) + mod(uv.x+uv.y, 0.2));',
+        '      v += lineWidth*float(i*i) / abs(fract(t - 0.01*float(j)+float(i)*0.01)*5.0 - length(uv) + mod(uv.x+uv.y, 0.2));',
         '    }',
         '  }',
-        '  gl_FragColor = vec4(color[0],color[1],color[2],1.0);',
+        '  v *= 0.45;',
+        '  vec3 col = v * vec3(0.98, 0.42, 0.08) + v*v*0.18*vec3(1.0, 0.78, 0.34);',
+        '  gl_FragColor = vec4(col, 1.0);',
         '}'
       ].join('\n');
 
