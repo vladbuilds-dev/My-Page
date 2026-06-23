@@ -4,7 +4,7 @@
     {
       "name": "vladpage",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/tmp/vladpage"],
+      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/Users/marinaabramova/Desktop/Only Claude/My-Page"],
       "port": 4321
     }
   ]
