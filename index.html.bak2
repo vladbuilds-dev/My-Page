@@ -132,6 +132,22 @@
     .vapor-wrap canvas { display: block; }
     .vapor-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: clamp(34px,7vw,64px); color: #fff; }
 
+    /* ===== Interactive 3D (Spline) ===== */
+    .spline-card {
+      position: relative; overflow: hidden; border-radius: 22px;
+      border: 1px solid var(--line); background: rgba(6,7,11,.96);
+      min-height: 460px; display: grid; grid-template-columns: 1fr 1fr;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    }
+    .spotlight { position: absolute; top: -40%; left: -10%; width: 90%; height: 160%; z-index: 1; pointer-events: none; opacity: .5;
+      background: radial-gradient(closest-side, rgba(255,255,255,.18), transparent 70%); filter: blur(20px); transform: rotate(-12deg); }
+    .spline-text { position: relative; z-index: 2; padding: 48px; display: flex; flex-direction: column; justify-content: center; }
+    .spline-text h3 { font-family: var(--display); font-size: clamp(30px, 4.5vw, 46px); font-weight: 700; line-height: 1.08;
+      background: linear-gradient(180deg, #fafafa, #9aa7b4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .spline-text p { color: var(--muted); margin-top: 16px; max-width: 420px; }
+    .spline-holder { position: relative; z-index: 2; }
+    .spline-holder spline-viewer { width: 100%; height: 100%; display: block; }
+    .spline-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
 
     /* ===== Features bento (Услуги) ===== */
     .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
@@ -439,6 +455,11 @@
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.in { opacity: 1; transform: none; }
 
+    @media (max-width: 820px) {
+      .spline-card { grid-template-columns: 1fr; min-height: auto; }
+      .spline-holder { height: 340px; order: -1; }
+      .spline-text { padding: 32px; }
+    }
     @media (max-width: 720px) {
       .hero { min-height: 88vh; }
     }
@@ -523,6 +544,58 @@
     .ghbtn:hover .gh-content { color: var(--accent); }
     .ghbtn .gh-ico { width: 20px; height: 20px; }
 
+    /* ================= Scroll-expand интро (порт 21st.dev) ================= */
+    .nav { transition: background .3s ease, border-color .3s ease, opacity .45s ease; }
+    #scroll-progress { transition: width .12s linear, opacity .45s ease; }
+    body.intro .nav, body.intro #scroll-progress { opacity: 0; pointer-events: none; }
+
+    #expand-hero { position: relative; width: 100%; overflow: hidden; }
+    .xh-bg { position: absolute; inset: 0; z-index: 0; will-change: opacity;
+      background:
+        radial-gradient(1200px 720px at 50% 28%, rgba(124,108,255,.24), transparent 60%),
+        radial-gradient(900px 600px at 82% 82%, rgba(167,139,250,.15), transparent 60%),
+        var(--bg2); }
+    .xh-grid { position: absolute; inset: 0; z-index: 1; opacity: .6;
+      background-image:
+        linear-gradient(var(--line-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 48px 48px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at center, #000 25%, transparent 78%);
+      mask-image: radial-gradient(ellipse 70% 60% at center, #000 25%, transparent 78%); }
+    .xh-center { position: relative; z-index: 2; width: 100%; min-height: 100dvh;
+      display: flex; align-items: center; justify-content: center; }
+    .xh-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 1;
+      border-radius: 18px; overflow: hidden; max-width: 95vw; max-height: 85vh;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px var(--line); }
+    .xh-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .xh-veil { position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(10,11,16,.25), rgba(10,11,16,.6)); }
+    .xh-cap { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      gap: 8px; text-align: center; padding-bottom: 26px; }
+    .xh-cap .xh-date { font-family: var(--mono); font-size: clamp(12px, 1.8vw, 15px);
+      letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+    .xh-cap .xh-hint { font-family: var(--mono); font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted);
+      display: inline-flex; align-items: center; gap: 9px; }
+    .xh-cap .xh-hint svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none;
+      stroke-linecap: round; stroke-linejoin: round; animation: xhBob 1.6s ease-in-out infinite; }
+    @keyframes xhBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+    .xh-title { position: relative; z-index: 3; pointer-events: none; mix-blend-mode: difference;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+    .xh-title span { font-family: var(--display); font-weight: 700; letter-spacing: -.02em; line-height: 1;
+      font-size: clamp(40px, 9vw, 94px); color: #fff; white-space: nowrap; }
+    .xh-content { position: relative; z-index: 3; width: 100%; max-width: 720px; margin: 0 auto;
+      padding: 56px 24px 96px; text-align: center; opacity: 0; transition: opacity .7s ease; }
+    .xh-content.show { opacity: 1; }
+    .xh-content h3 { font-family: var(--display); font-size: clamp(22px, 4vw, 34px); font-weight: 700; letter-spacing: -.01em; }
+    .xh-content p { color: var(--muted); margin-top: 14px; }
+    .xh-down { margin-top: 30px; display: inline-flex; flex-direction: column; align-items: center; gap: 9px;
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
+    .xh-down::after { content: ''; width: 1px; height: 26px; background: linear-gradient(var(--accent), transparent); }
+    @media (prefers-reduced-motion: reduce) {
+      .xh-content { opacity: 1; transition: none; }
+      .xh-cap .xh-hint svg { animation: none; }
+    }
 
     /* Скролл-навигация: активный раздел */
     .nav-links a.active { color: var(--text); }
@@ -550,6 +623,34 @@
 </head>
 <body>
 
+  <!-- ===== Scroll-expand интро ===== -->
+  <section id="expand-hero" aria-label="Интро">
+    <div class="xh-bg" id="xh-bg"></div>
+    <div class="xh-grid" aria-hidden="true"></div>
+    <div class="xh-center">
+      <div class="xh-media" id="xh-media">
+        <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1280&q=80"
+             alt="Код веб-проекта" onerror="this.style.display='none'" />
+        <div class="xh-veil"></div>
+        <div class="xh-cap">
+          <span class="xh-date">Влад · веб-разработчик</span>
+          <span class="xh-hint">Листайте, чтобы войти
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+          </span>
+        </div>
+      </div>
+      <h2 class="xh-title">
+        <span id="xh-w1">Цифровая</span>
+        <span id="xh-w2">мастерская</span>
+      </h2>
+    </div>
+    <div class="xh-content" id="xh-content">
+      <h3>От идеи до запуска</h3>
+      <p>Лендинги, интернет-магазины и веб-сервисы под ключ. Чисто, быстро и под твой бренд — без шаблонов из конструктора.</p>
+      <span class="xh-down">Знакомьтесь ниже</span>
+    </div>
+  </section>
+
   <!-- ===== Прогресс прокрутки + навигация ===== -->
   <div id="scroll-progress" aria-hidden="true"></div>
   <nav class="nav" id="nav" aria-label="Главное меню">
@@ -562,8 +663,8 @@
         <a href="#services">Услуги</a>
         <a href="#process">Процесс</a>
         <a href="#cases">Кейсы</a>
-        <a href="#ideas">Идеи</a>
         <a href="#catalog">Каталог</a>
+        <a href="#ideas">Идеи</a>
         <a href="#otzyvy">Отзывы</a>
       </div>
       <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com">Написать</a>
@@ -814,31 +915,7 @@
         </ul>
         </div>
       </div>
-    </section>
-
-    <!-- ===== Каталог идей — hover-slider направлений (порт animated-slideshow) ===== -->
-    <section class="reveal" id="ideas">
-      <div class="section-head">
-        <div class="section-title">Каталог идей</div>
-        <h2>Направления дизайна</h2>
-        <p>Наведите на направление — покажу настроение. На телефоне — тапните по строке.</p>
-      </div>
-      <div class="hslider">
-        <ul class="hs-list" id="hs-list">
-          <li><button class="hs-item" type="button"><span class="hs-text">Тёмный люкс</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Минимализм</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">3D и анимация</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Бруталист</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Глянец и спа</span></button></li>
-        </ul>
-        <div class="hs-images" id="hs-images">
-          <img class="hs-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80" alt="Тёмный люкс — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Минимализм — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=900&q=80" alt="3D и анимация — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80" alt="Бруталист — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Глянец и спа — настроение" loading="lazy" />
-        </div>
-      </div>
+      <div class="rwheel-hint"><span class="dot"></span>Листайте — колесо вращается</div>
     </section>
 
     <!-- ===== Каталог решений — карусель (порт gallery6 на ваниль + Embla) ===== -->
@@ -934,6 +1011,51 @@
       </div>
     </section>
 
+    <!-- ===== Каталог идей — hover-slider направлений (порт animated-slideshow) ===== -->
+    <section class="reveal" id="ideas">
+      <div class="section-head">
+        <div class="section-title">Каталог идей</div>
+        <h2>Направления дизайна</h2>
+        <p>Наведите на направление — покажу настроение. На телефоне — тапните по строке.</p>
+      </div>
+      <div class="hslider">
+        <ul class="hs-list" id="hs-list">
+          <li><button class="hs-item" type="button"><span class="hs-text">Тёмный люкс</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Минимализм</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">3D и анимация</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Бруталист</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Глянец и спа</span></button></li>
+        </ul>
+        <div class="hs-images" id="hs-images">
+          <img class="hs-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80" alt="Тёмный люкс — настроение" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Минимализм — настроение" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=900&q=80" alt="3D и анимация — настроение" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80" alt="Бруталист — настроение" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Глянец и спа — настроение" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Interactive 3D (Spline) — флёр возможностей ===== -->
+    <section class="reveal">
+      <div class="spline-card">
+        <svg class="spotlight" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <ellipse cx="200" cy="200" rx="200" ry="80" fill="white" fill-opacity="0.5" />
+        </svg>
+        <div class="spline-text">
+          <h3>И не только сайты</h3>
+          <p>Оживляю интерфейсы трёхмерными сценами и анимацией. Такие детали удерживают внимание и выделяют проект среди шаблонных решений.</p>
+          <div class="btns">
+            <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label">Хочу так же</span></a>
+          </div>
+        </div>
+        <div class="spline-holder">
+          <div class="spline-fallback">[ 3D-сцена загружается ]</div>
+          <spline-viewer url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"></spline-viewer>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Отзывы — shuffle-колода ===== -->
     <section class="reveal" id="otzyvy">
       <div class="section-head">
@@ -987,8 +1109,8 @@
           <a href="#services">Услуги</a>
           <a href="#process">Процесс</a>
           <a href="#cases">Кейсы</a>
-          <a href="#ideas">Идеи</a>
           <a href="#catalog">Каталог</a>
+          <a href="#ideas">Идеи</a>
           <a href="#otzyvy">Отзывы</a>
         </nav>
         <div class="foot-col">
@@ -1020,6 +1142,7 @@
 
   <!-- Three.js для шейдера + Spline-viewer для 3D -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
   <!-- GSAP + ScrollTrigger для радиальной scroll-галереи кейсов -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -1051,7 +1174,7 @@
     // ===== Подсветка активного раздела в навигации =====
     (function () {
       if (!('IntersectionObserver' in window)) return;
-      var ids = ['services', 'process', 'cases', 'ideas', 'catalog', 'otzyvy'];
+      var ids = ['services', 'process', 'cases', 'catalog', 'ideas', 'otzyvy'];
       var links = {};
       ids.forEach(function (id) { links[id] = document.querySelector('.nav-links a[href="#' + id + '"]'); });
       var secs = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
@@ -1579,6 +1702,101 @@
         });
       }, { threshold: 0.12 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // ===== Scroll-expand интро (порт ScrollExpandMedia на ваниль) =====
+    (function () {
+      var root = document.getElementById('expand-hero');
+      if (!root) return;
+      var media = document.getElementById('xh-media');
+      var bg = document.getElementById('xh-bg');
+      var w1 = document.getElementById('xh-w1');
+      var w2 = document.getElementById('xh-w2');
+      var content = document.getElementById('xh-content');
+
+      var progress = 0, expanded = false, touchY = 0;
+      var mobile = window.innerWidth < 768;
+
+      function apply() {
+        var mw = 300 + progress * (mobile ? 650 : 1250);
+        var mh = 400 + progress * (mobile ? 200 : 400);
+        var tx = progress * (mobile ? 180 : 150);
+        media.style.width = mw + 'px';
+        media.style.height = mh + 'px';
+        bg.style.opacity = String(1 - progress);
+        w1.style.transform = 'translateX(-' + tx + 'vw)';
+        w2.style.transform = 'translateX(' + tx + 'vw)';
+      }
+      function setProgress(v) {
+        progress = Math.min(Math.max(v, 0), 1);
+        apply();
+        if (progress >= 1) expand();
+        else if (progress < 0.75) content.classList.remove('show');
+      }
+      function expand() {
+        if (expanded) return;
+        expanded = true;
+        document.body.classList.remove('intro');
+        document.body.style.overflow = '';
+        root.style.cursor = '';
+        content.classList.add('show');
+      }
+      function collapse() {
+        expanded = false;
+        document.body.classList.add('intro');
+        document.body.style.overflow = 'hidden';
+        root.style.cursor = 'pointer';
+        progress = 0; apply();
+        content.classList.remove('show');
+      }
+
+      // prefers-reduced-motion: без перехвата скролла — статичный экран
+      if (REDUCED) { apply(); content.classList.add('show'); return; }
+
+      document.body.classList.add('intro');
+      document.body.style.overflow = 'hidden';
+      apply();
+
+      function onWheel(e) {
+        if (expanded && e.deltaY < 0 && window.scrollY <= 5) { collapse(); e.preventDefault(); return; }
+        if (!expanded) { e.preventDefault(); setProgress(progress + e.deltaY * 0.0009); }
+      }
+      function onTouchStart(e) { touchY = e.touches[0].clientY; }
+      function onTouchMove(e) {
+        if (!touchY) return;
+        var ty = e.touches[0].clientY, dy = touchY - ty;
+        if (expanded && dy < -20 && window.scrollY <= 5) { collapse(); e.preventDefault(); return; }
+        if (!expanded) {
+          e.preventDefault();
+          var f = dy < 0 ? 0.008 : 0.005;
+          setProgress(progress + dy * f);
+          touchY = ty;
+        }
+      }
+      function onTouchEnd() { touchY = 0; }
+      function onScroll() { if (!expanded) window.scrollTo(0, 0); }
+      function onResize() { mobile = window.innerWidth < 768; apply(); }
+      // Доступность: клавиатура и клик как альтернатива колесу/свайпу
+      function onKey(e) {
+        if (expanded) {
+          if ((e.key === 'ArrowUp' || e.key === 'PageUp') && window.scrollY <= 5) { collapse(); e.preventDefault(); }
+          return;
+        }
+        if (['ArrowDown', 'PageDown', ' ', 'Spacebar', 'Enter'].indexOf(e.key) !== -1) {
+          e.preventDefault(); setProgress(progress + 0.34);
+        }
+      }
+      function onClick() { if (!expanded) setProgress(progress + 0.34); }
+
+      window.addEventListener('wheel', onWheel, { passive: false });
+      window.addEventListener('scroll', onScroll);
+      window.addEventListener('touchstart', onTouchStart, { passive: false });
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+      window.addEventListener('touchend', onTouchEnd);
+      window.addEventListener('resize', onResize);
+      window.addEventListener('keydown', onKey);
+      root.addEventListener('click', onClick);
+      root.style.cursor = 'pointer';
     })();
   </script>
 </body>
