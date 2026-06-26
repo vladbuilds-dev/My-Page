@@ -216,6 +216,61 @@
       background: radial-gradient(240px circle at var(--mx, -200px) var(--my, -200px), rgba(124,108,255,.16), transparent 70%); }
     .glow:hover::before { opacity: 1; }
 
+    /* ===== Работы / карусель ===== */
+    .pcard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; justify-items: center; }
+    .pcard {
+      position: relative; display: block; width: 100%; max-width: 330px; aspect-ratio: 9 / 12;
+      border-radius: 22px; overflow: hidden; background: var(--card); text-decoration: none; color: inherit;
+      transform: perspective(1000px) rotateX(0) rotateY(0); transform-style: preserve-3d; will-change: transform;
+      box-shadow: 0 14px 40px rgba(0,0,0,.45); border: 1px solid var(--line);
+    }
+    .pcard-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: translateZ(-20px) scale(1.12); }
+    .pcard-veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.66), rgba(0,0,0,.18) 46%, transparent 75%); }
+    .pcard-content { position: absolute; inset: 0; padding: 16px; display: flex; flex-direction: column; transform: translateZ(45px); }
+    .pcard-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+      border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.08); backdrop-filter: blur(8px);
+      border-radius: 14px; padding: 13px 14px;
+    }
+    .pcard-head h3 { color: #fff; font-size: 17px; line-height: 1.2; }
+    .pcard-head p { color: rgba(255,255,255,.74); font-size: 12px; margin-top: 3px; }
+    .pcard-badge { white-space: nowrap; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #fff;
+      background: rgba(0,0,0,.42); border: 1px solid rgba(255,255,255,.16); padding: 5px 9px; border-radius: 999px; }
+    .pcard-price { align-self: flex-start; margin-top: 14px; color: #fff; font-family: var(--mono); font-weight: 600; font-size: 13px; font-variant-numeric: tabular-nums;
+      background: rgba(0,0,0,.46); backdrop-filter: blur(4px); padding: 7px 14px; border-radius: 999px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    .pcard { transition: transform .3s ease, box-shadow .3s ease; }
+    .pcard:hover { transform: perspective(1000px) translateY(-6px); box-shadow: 0 22px 52px rgba(0,0,0,.55); border-color: rgba(124,108,255,.45); }
+
+    /* ===== Радиальная scroll-галерея кейсов ===== */
+    .rwheel-stage { position: relative; width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .rwheel-mask { position: relative; width: 100%; overflow: hidden;
+      -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 38%, #000 100%);
+              mask-image: linear-gradient(to top, transparent 0%, #000 38%, #000 100%); }
+    .rwheel-track { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; padding: 0; list-style: none;
+      will-change: transform; opacity: 0; transition: opacity .5s ease; }
+    .rwheel-track.ready { opacity: 1; }
+    .rwheel-track.has-active .rwheel-item:not(.is-active) .rwheel-cell { filter: blur(2px) grayscale(1); opacity: .42; }
+    .rwheel-item { position: absolute; top: 50%; left: 50%; z-index: 10; }
+    .rwheel-item.is-active { z-index: 100; }
+    .rwheel-cell { display: block; border-radius: 18px; cursor: pointer; outline: none;
+      transition: transform .5s ease, filter .5s ease, opacity .5s ease; will-change: transform; }
+    .rwheel-item.is-active .rwheel-cell { transform: scale(1.16) translateY(-10px); }
+    .rwheel-cell:focus-visible { box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px rgba(124,108,255,.25); }
+    .rwheel-cell .pcard { width: 200px; max-width: none; aspect-ratio: 9 / 12; transform: none; box-shadow: 0 18px 44px rgba(0,0,0,.5); }
+    @media (min-width: 768px) { .rwheel-cell .pcard { width: 234px; } }
+    .rwheel-cell .pcard:hover { transform: none; box-shadow: 0 18px 44px rgba(0,0,0,.5); border-color: var(--line); }
+    .rwheel-hint { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 6px;
+      color: var(--muted); font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; }
+    .rwheel-hint .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: rwheelpulse 1.6s ease-in-out infinite; }
+    @keyframes rwheelpulse { 0%, 100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.2); } }
+    /* fallback: reduced-motion / нет GSAP — простая сетка */
+    .rwheel-stage.is-fallback { min-height: auto; display: block; }
+    .rwheel-stage.is-fallback .rwheel-mask { -webkit-mask-image: none; mask-image: none; height: auto !important; }
+    .rwheel-track.is-fallback { position: static; transform: none; width: 100% !important; height: auto !important;
+      display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; opacity: 1; bottom: auto !important; padding: 8px 0; }
+    .rwheel-track.is-fallback .rwheel-item { position: static; }
+    .rwheel-track.is-fallback .rwheel-item .rwheel-cell { transform: none; }
+
     /* ===== Каталог решений — карусель (порт gallery6) ===== */
     .cat-head { display: flex; flex-direction: column; gap: 22px; margin-bottom: 34px; }
     @media (min-width: 768px) { .cat-head { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
@@ -441,7 +496,7 @@
     @media (max-width: 520px) { .brand .mono-sub { display: none; } }
 
     /* Якоря не уходят под фиксированную панель */
-    #services, #process, #catalog, #ideas, #otzyvy { scroll-margin-top: 88px; }
+    #services, #process, #cases, #catalog, #ideas, #otzyvy { scroll-margin-top: 88px; }
 
     /* Доказательства в герое */
     .hero-stats { display: flex; gap: 38px; margin-top: 44px; flex-wrap: wrap; }
@@ -506,7 +561,7 @@
       <div class="nav-links">
         <a href="#services">Услуги</a>
         <a href="#process">Процесс</a>
-        <a href="cases.html">Кейсы</a>
+        <a href="#cases">Кейсы</a>
         <a href="#ideas">Идеи</a>
         <a href="#catalog">Каталог</a>
         <a href="#otzyvy">Отзывы</a>
@@ -641,12 +696,122 @@
           <p>Тёмный технологичный интерфейс для финтех-платформы: плавные анимации, понятная структура и быстрая загрузка. Сайт, который выглядит дороже бюджета.</p>
           <div class="btns">
             <a class="lqbtn" href="https://kairo-sixseven.vercel.app/" target="_blank" rel="noopener"><span class="lq-glass"></span><span class="lq-label">Открыть кейс</span></a>
-            <a class="lqbtn" href="cases.html"><span class="lq-glass"></span><span class="lq-label">Все кейсы →</span></a>
           </div>
         </div>
         <div class="m-visual">
           <div class="m-shot m-back" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80');"></div>
           <div class="m-shot m-front" style="background-image:url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80');"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Примеры работ ===== -->
+    <section class="reveal" id="cases">
+      <div class="section-head">
+        <div class="section-title">Примеры работ</div>
+        <h2>Кейсы</h2>
+        <p>От новых к ранним. Листайте страницу — колесо кейсов вращается. Наведите на карточку, чтобы приблизить и открыть.</p>
+      </div>
+
+      <div class="rwheel-stage" id="cases-stage" aria-label="Кейсы — вращающееся колесо">
+        <div class="rwheel-mask" id="cases-mask">
+        <ul class="rwheel-track" id="cases-track">
+        <a class="pcard" href="https://halo-english-maket.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#14110f,#3a2c20);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80" alt="HALO — фотостудия" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>HALO</h3><p>Фотостудия · бронирование</p></div>
+              <span class="pcard-badge">Новое</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://meridian-silk-gamma.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0f0f10,#26211b);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80" alt="Meridian — дизайн-студия" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Meridian</h3><p>Дизайн-студия · многостр.</p></div>
+              <span class="pcard-badge">Студия</span>
+            </div>
+            <div class="pcard-price">250–450 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://cadence-three-smoky.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0a0a0a,#171a21);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=700&q=80" alt="Cadence — SaaS для разработчиков" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Cadence</h3><p>SaaS для разработчиков · лендинг</p></div>
+              <span class="pcard-badge">SaaS</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://kairo-sixseven.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0b1026,#1e1b4b);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=700&q=80" alt="KAIRO — agentic DeFi" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>KAIRO</h3><p>Agentic DeFi · 5 страниц</p></div>
+              <span class="pcard-badge">DeFi</span>
+            </div>
+            <div class="pcard-price">250–500 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://spa-gold-new.vercel.app/" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=700&q=80" alt="Спа Spa Gold" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Spa Gold</h3><p>Спа тихой роскоши · 4 страницы</p></div>
+              <span class="pcard-badge">Спа</span>
+            </div>
+            <div class="pcard-price">150–300 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://gran-rho.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" alt="Барбершоп Грань" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Грань</h3><p>Барбершоп · запись онлайн</p></div>
+              <span class="pcard-badge">Запись</span>
+            </div>
+            <div class="pcard-price">120–250 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://a-fit.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Фитнес-клуб A-FIT" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>A-FIT</h3><p>Фитнес-клуб · каталог</p></div>
+              <span class="pcard-badge">Многостр.</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://teplyy-ugol.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=700&q=80" alt="Кофейня Тёплый угол" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Тёплый угол</h3><p>Кофейня · конструктор напитков</p></div>
+              <span class="pcard-badge">Кофейня</span>
+            </div>
+            <div class="pcard-price">100–200 USDT</div>
+          </div>
+        </a>
+        </ul>
         </div>
       </div>
     </section>
@@ -821,7 +986,7 @@
           <span class="foot-h">Разделы</span>
           <a href="#services">Услуги</a>
           <a href="#process">Процесс</a>
-          <a href="cases.html">Кейсы</a>
+          <a href="#cases">Кейсы</a>
           <a href="#ideas">Идеи</a>
           <a href="#catalog">Каталог</a>
           <a href="#otzyvy">Отзывы</a>
@@ -855,6 +1020,9 @@
 
   <!-- Three.js для шейдера + Spline-viewer для 3D -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- GSAP + ScrollTrigger для радиальной scroll-галереи кейсов -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <!-- Embla Carousel для каталога решений (порт gallery6) -->
   <script src="https://unpkg.com/embla-carousel@8.3.0/embla-carousel.umd.js"></script>
   <script>
@@ -883,7 +1051,7 @@
     // ===== Подсветка активного раздела в навигации =====
     (function () {
       if (!('IntersectionObserver' in window)) return;
-      var ids = ['services', 'process', 'ideas', 'catalog', 'otzyvy'];
+      var ids = ['services', 'process', 'cases', 'ideas', 'catalog', 'otzyvy'];
       var links = {};
       ids.forEach(function (id) { links[id] = document.querySelector('.nav-links a[href="#' + id + '"]'); });
       var secs = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
@@ -1230,6 +1398,95 @@
       }
       if (nextBtn) nextBtn.addEventListener('click', shuffle);
       build();
+    })();
+
+    // ===== Кейсы — радиальная scroll-галерея (порт RadialScrollGallery на ваниль + GSAP) =====
+    (function () {
+      var stage = document.getElementById('cases-stage');
+      var mask = document.getElementById('cases-mask');
+      var track = document.getElementById('cases-track');
+      if (!stage || !mask || !track) return;
+
+      // Берём существующие карточки .pcard и оборачиваем каждую в спицу колеса.
+      var cards = Array.prototype.slice.call(track.querySelectorAll('.pcard'));
+      if (!cards.length) return;
+
+      var items = cards.map(function (card, i) {
+        var li = document.createElement('li');
+        li.className = 'rwheel-item';
+        var cell = document.createElement('div');
+        cell.className = 'rwheel-cell';
+        card.setAttribute('tabindex', '-1'); // фокус ведём через ячейку
+        cell.appendChild(card);
+        li.appendChild(cell);
+        track.appendChild(li);
+
+        function activate() { setActive(i); }
+        function clear() { setActive(null); }
+        cell.addEventListener('mouseenter', activate);
+        cell.addEventListener('mouseleave', clear);
+        card.addEventListener('focus', activate);
+        card.addEventListener('blur', clear);
+        return li;
+      });
+
+      function setActive(idx) {
+        track.classList.toggle('has-active', idx !== null);
+        items.forEach(function (li, i) { li.classList.toggle('is-active', i === idx); });
+      }
+
+      var n = items.length;
+
+      function layout() {
+        var radius = window.innerWidth < 768 ? 240 : 460;
+        var diameter = radius * 2;
+        var visible = 0.5, hidden = 1 - visible;
+
+        track.style.width = diameter + 'px';
+        track.style.height = diameter + 'px';
+        track.style.bottom = (-(diameter * hidden)) + 'px';
+
+        items.forEach(function (li, i) {
+          var ang = (i / n) * 2 * Math.PI;
+          var x = radius * Math.cos(ang);
+          var y = radius * Math.sin(ang);
+          var rot = ang * 180 / Math.PI + 90;
+          li.style.transform = 'translate(-50%, -50%) translate3d(' + x + 'px, ' + y + 'px, 0) rotate(' + rot + 'deg)';
+        });
+
+        var first = items[0].querySelector('.pcard');
+        var ch = first ? first.getBoundingClientRect().height : 300;
+        var buffer = ch * 0.25 + 60;
+        mask.style.height = (diameter * visible + ch / 2 + buffer) + 'px';
+
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      }
+
+      // Fallback: reduced-motion или GSAP не загрузился — простая адаптивная сетка.
+      if (REDUCED || !window.gsap || !window.ScrollTrigger) {
+        stage.classList.add('is-fallback');
+        track.classList.add('is-fallback', 'ready');
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+      layout();
+      track.classList.add('ready');
+
+      // Появление карточек при входе секции в кадр.
+      gsap.fromTo(items, { scale: 0, autoAlpha: 0 }, {
+        scale: 1, autoAlpha: 1, duration: 1.1, ease: 'back.out(1.2)', stagger: 0.05,
+        scrollTrigger: { trigger: stage, start: 'top 80%', toggleActions: 'play none none reverse' }
+      });
+
+      // Вращение колеса на 360° — секция пинится на время прокрутки.
+      gsap.to(track, {
+        rotation: 360, ease: 'none',
+        scrollTrigger: { trigger: stage, pin: true, start: 'center center', end: '+=2200', scrub: 1, invalidateOnRefresh: true }
+      });
+
+      var rt;
+      window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(layout, 120); });
     })();
 
     // ===== Каталог решений — карусель (Embla + фолбэк на нативный скролл) =====

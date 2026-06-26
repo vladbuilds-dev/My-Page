@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кейсы — Влад · веб-разработчик</title>
+  <meta name="description" content="Портфолио Влада: живые сайты и лендинги под ключ — от барбершопа до DeFi-платформы. Открой и потрогай каждый проект." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,500;1,600;1,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b10;
+      --bg2: #06070b;
+      --card: #12141c;
+      --line: #20242f;
+      --line-soft: rgba(231,237,243,.07);
+      --text: #eef1f6;
+      --muted: #9098a8;
+      --accent: #7c6cff;
+      --accent2: #a78bfa;
+      --grad: linear-gradient(90deg, var(--accent), var(--accent2));
+      --display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:
+        radial-gradient(1200px 620px at 75% -8%, rgba(124,108,255,.18), transparent 60%),
+        radial-gradient(900px 520px at 8% 4%, rgba(167,139,250,.10), transparent 55%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+
+    /* Прогресс прокрутки */
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 1000;
+      background: var(--grad); box-shadow: 0 0 12px rgba(124,108,255,.7); transition: width .12s linear; }
+
+    /* Навигация */
+    .nav { position: fixed; inset: 0 0 auto 0; z-index: 900;
+      border-bottom: 1px solid transparent; transition: background .3s ease, border-color .3s ease; }
+    .nav.scrolled { background: rgba(10,11,16,.72);
+      -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
+      border-bottom-color: var(--line); }
+    .nav-inner { max-width: 1160px; margin: 0 auto; padding: 18px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; transition: padding .3s ease; }
+    .nav.scrolled .nav-inner { padding-top: 12px; padding-bottom: 12px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none;
+      font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.01em; color: var(--text); }
+    .brand .mono { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+      background: var(--grad); color: #06070b; font-weight: 800; font-size: 16px; box-shadow: 0 6px 18px rgba(124,108,255,.34); }
+    .brand .mono-sub { color: var(--muted); font-weight: 400; font-size: 11.5px; font-family: var(--mono); letter-spacing: .02em; }
+    .nav-links { display: flex; gap: 30px; }
+    .nav-links a { position: relative; color: var(--muted); text-decoration: none; font-size: 14px;
+      font-weight: 600; padding: 4px 0; transition: color .15s ease; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px;
+      border-radius: 2px; background: var(--grad); transition: right .25s ease; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover::after, .nav-links a.active::after { right: 0; }
+    .nav-cta { display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+      font-weight: 700; font-size: 14px; color: #06070b; background: var(--grad);
+      padding: 9px 18px; border-radius: 10px; box-shadow: 0 8px 22px rgba(124,108,255,.28);
+      transition: transform .15s ease, box-shadow .2s ease; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(124,108,255,.4); }
+    @media (max-width: 760px) { .nav-links { display: none; } .nav-inner { padding: 14px 20px; } }
+    @media (max-width: 520px) { .brand .mono-sub { display: none; } }
+
+    /* Шапка страницы кейсов */
+    .cases-hero { position: relative; padding: 158px 0 26px; }
+    .back-link { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono);
+      font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-bottom: 24px; transition: color .15s ease, transform .15s ease; }
+    .back-link:hover { color: var(--accent); transform: translateX(-3px); }
+    .kicker { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono);
+      font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+      border: 1px solid var(--line); background: rgba(18,20,28,.5); backdrop-filter: blur(6px);
+      padding: 7px 15px; border-radius: 999px; margin-bottom: 24px; }
+    .kicker .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 12px var(--accent); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    .cases-hero h1 { font-family: var(--display); font-size: clamp(48px, 9vw, 96px); font-weight: 600;
+      letter-spacing: -.02em; line-height: .98; }
+    .cases-hero h1 .it { font-style: italic; background: var(--grad);
+      -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); max-width: 620px; margin-top: 18px; }
+    .hero-stats { display: flex; gap: 38px; margin-top: 40px; flex-wrap: wrap; }
+    .hstat { display: flex; flex-direction: column; gap: 3px; position: relative; }
+    .hstat b { font-family: var(--display); font-size: clamp(25px, 3.6vw, 34px); font-weight: 600;
+      font-variant-numeric: tabular-nums; line-height: 1;
+      background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hstat span { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .hstat + .hstat::before { content: ''; position: absolute; left: -19px; top: 3px; bottom: 3px; width: 1px; background: var(--line); }
+    @media (max-width: 520px) { .hero-stats { gap: 24px; } .hstat + .hstat::before { left: -12px; } }
+
+    /* Сетка кейсов */
+    .cases-section { padding: 26px 0 80px; }
+    .pcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 26px; justify-items: center; }
+    .pcard {
+      position: relative; display: block; width: 100%; max-width: 360px; aspect-ratio: 9 / 12;
+      border-radius: 22px; overflow: hidden; background: var(--card); text-decoration: none; color: inherit;
+      box-shadow: 0 14px 40px rgba(0,0,0,.45); border: 1px solid var(--line);
+      transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+    .pcard-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .pcard:hover { transform: translateY(-6px); box-shadow: 0 24px 56px rgba(0,0,0,.55); border-color: rgba(124,108,255,.45); }
+    .pcard:hover .pcard-img { transform: scale(1.06); }
+    .pcard-veil { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.7), rgba(0,0,0,.2) 46%, transparent 75%); }
+    .pcard-content { position: absolute; inset: 0; padding: 16px; display: flex; flex-direction: column; }
+    .pcard-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+      border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.08); backdrop-filter: blur(8px);
+      border-radius: 14px; padding: 13px 14px; }
+    .pcard-head h3 { color: #fff; font-family: var(--display); font-weight: 600; font-size: 19px; line-height: 1.2; }
+    .pcard-head p { color: rgba(255,255,255,.74); font-size: 12px; margin-top: 3px; }
+    .pcard-badge { white-space: nowrap; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #fff;
+      background: rgba(0,0,0,.42); border: 1px solid rgba(255,255,255,.16); padding: 5px 9px; border-radius: 999px; }
+    .pcard-price { align-self: flex-start; margin-top: auto; color: #fff; font-family: var(--mono); font-weight: 600; font-size: 13px; font-variant-numeric: tabular-nums;
+      background: rgba(0,0,0,.46); backdrop-filter: blur(4px); padding: 7px 14px; border-radius: 999px; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+    .pcard-open { align-self: flex-start; margin-top: 12px; display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #fff;
+      opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; }
+    .pcard:hover .pcard-open { opacity: 1; transform: none; }
+    .pcard-open svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Появление при скролле */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* CTA */
+    .cta { border-top: 1px solid var(--line); text-align: center; padding: 80px 24px; }
+    .cta h2 { font-family: var(--display); font-size: clamp(28px, 5vw, 48px); font-weight: 600; letter-spacing: -.015em; }
+    .cta h2 .it { font-style: italic; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .cta p { color: var(--muted); max-width: 460px; margin: 14px auto 0; }
+    .btns { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 30px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 12px;
+      font-weight: 700; font-size: 16px; text-decoration: none; transition: transform .15s ease, box-shadow .2s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--grad); color: #06070b; box-shadow: 0 10px 30px rgba(124,108,255,.28); }
+    .btn-primary:hover { box-shadow: 0 14px 38px rgba(124,108,255,.42); }
+    .btn-ghost { border: 1px solid var(--line); color: var(--text); background: rgba(18,20,28,.4); backdrop-filter: blur(6px); }
+
+    /* Подвал */
+    footer { border-top: 1px solid var(--line); padding: 56px 0 34px; color: var(--muted); font-size: 14px; }
+    .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1.2fr; gap: 32px; align-items: start; }
+    .foot-brand p { margin-top: 14px; max-width: 320px; line-height: 1.6; }
+    .foot-brand .brand { margin-bottom: 2px; }
+    .foot-col { display: flex; flex-direction: column; gap: 11px; }
+    .foot-h { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--text); margin-bottom: 3px; }
+    .foot-col a { color: var(--muted); text-decoration: none; transition: color .15s ease; width: fit-content; }
+    .foot-col a:hover { color: var(--accent); }
+    .foot-cta { margin-top: 6px; font-weight: 700; color: var(--accent) !important; }
+    .foot-bottom { display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; }
+    .foot-top { color: var(--muted); text-decoration: none; transition: color .15s ease; }
+    .foot-top:hover { color: var(--accent); }
+    @media (max-width: 720px) {
+      .foot-grid { grid-template-columns: 1fr; gap: 30px; }
+      .foot-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .kicker .dot { animation: none; }
+      .pcard, .pcard-img, .pcard-open { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <nav class="nav" id="nav" aria-label="Главное меню">
+    <div class="nav-inner">
+      <a class="brand" href="index.html" aria-label="Влад — на главную">
+        <span class="mono">В</span>
+        <span>Влад<span class="mono-sub"> · веб-разработчик</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#services">Услуги</a>
+        <a href="index.html#process">Процесс</a>
+        <a href="cases.html" class="active" aria-current="page">Кейсы</a>
+        <a href="index.html#ideas">Идеи</a>
+        <a href="index.html#catalog">Каталог</a>
+        <a href="index.html#otzyvy">Отзывы</a>
+      </div>
+      <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com">Написать</a>
+    </div>
+  </nav>
+
+  <!-- ===== Шапка страницы ===== -->
+  <header class="cases-hero">
+    <div class="wrap">
+      <a class="back-link" href="index.html">← На главную</a>
+      <span class="kicker"><span class="dot"></span>Портфолио</span>
+      <h1>Живые <span class="it">кейсы</span></h1>
+      <p class="lead">Сайты и лендинги под ключ — от барбершопа до DeFi-платформы. Каждый проект можно открыть и потрогать прямо сейчас.</p>
+      <div class="hero-stats">
+        <div class="hstat"><b>8</b><span>проектов</span></div>
+        <div class="hstat"><b>6</b><span>ниш</span></div>
+        <div class="hstat"><b>100%</b><span>адаптив</span></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Сетка кейсов ===== -->
+  <main class="wrap">
+    <section class="reveal cases-section" aria-label="Все кейсы">
+      <div class="pcard-grid">
+
+        <a class="pcard" href="https://halo-english-maket.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#14110f,#3a2c20);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=700&q=80" alt="HALO — фотостудия" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>HALO</h3><p>Фотостудия · бронирование</p></div>
+              <span class="pcard-badge">Новое</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://meridian-silk-gamma.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0f0f10,#26211b);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80" alt="Meridian — дизайн-студия" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Meridian</h3><p>Дизайн-студия · многостр.</p></div>
+              <span class="pcard-badge">Студия</span>
+            </div>
+            <div class="pcard-price">250–450 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://cadence-three-smoky.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0a0a0a,#171a21);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=700&q=80" alt="Cadence — SaaS для разработчиков" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Cadence</h3><p>SaaS для разработчиков · лендинг</p></div>
+              <span class="pcard-badge">SaaS</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://kairo-sixseven.vercel.app/" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0b1026,#1e1b4b);">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=700&q=80" alt="KAIRO — agentic DeFi" loading="lazy" onerror="this.style.display='none'" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>KAIRO</h3><p>Agentic DeFi · 5 страниц</p></div>
+              <span class="pcard-badge">DeFi</span>
+            </div>
+            <div class="pcard-price">250–500 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://spa-gold-new.vercel.app/" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=700&q=80" alt="Спа Spa Gold" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Spa Gold</h3><p>Спа тихой роскоши · 4 страницы</p></div>
+              <span class="pcard-badge">Спа</span>
+            </div>
+            <div class="pcard-price">150–300 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://gran-rho.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" alt="Барбершоп Грань" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Грань</h3><p>Барбершоп · запись онлайн</p></div>
+              <span class="pcard-badge">Запись</span>
+            </div>
+            <div class="pcard-price">120–250 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://a-fit.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Фитнес-клуб A-FIT" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>A-FIT</h3><p>Фитнес-клуб · каталог</p></div>
+              <span class="pcard-badge">Многостр.</span>
+            </div>
+            <div class="pcard-price">180–350 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+        <a class="pcard" href="https://teplyy-ugol.vercel.app" target="_blank" rel="noopener">
+          <img class="pcard-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=700&q=80" alt="Кофейня Тёплый угол" loading="lazy" />
+          <div class="pcard-veil"></div>
+          <div class="pcard-content">
+            <div class="pcard-head">
+              <div><h3>Тёплый угол</h3><p>Кофейня · конструктор напитков</p></div>
+              <span class="pcard-badge">Кофейня</span>
+            </div>
+            <div class="pcard-price">100–200 USDT</div>
+            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta">
+    <h2>Хочешь <span class="it">такой же</span> проект?</h2>
+    <p>Напишите — обсудим задачу, сроки и стоимость. Отвечаю быстро.</p>
+    <div class="btns">
+      <a class="btn btn-primary" href="mailto:abramov.vladislaw@gmail.com">Написать мне</a>
+      <a class="btn btn-ghost" href="index.html">Вернуться на главную</a>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <footer>
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="index.html" aria-label="Влад — на главную">
+            <span class="mono">В</span>
+            <span>Влад</span>
+          </a>
+          <p>Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.</p>
+        </div>
+        <nav class="foot-col" aria-label="Разделы">
+          <span class="foot-h">Разделы</span>
+          <a href="index.html#services">Услуги</a>
+          <a href="index.html#process">Процесс</a>
+          <a href="cases.html">Кейсы</a>
+          <a href="index.html#ideas">Идеи</a>
+          <a href="index.html#catalog">Каталог</a>
+          <a href="index.html#otzyvy">Отзывы</a>
+        </nav>
+        <div class="foot-col">
+          <span class="foot-h">Контакты</span>
+          <a href="mailto:abramov.vladislaw@gmail.com">abramov.vladislaw@gmail.com</a>
+          <a href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener">GitHub</a>
+          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com">Обсудить проект →</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> Влад · Сделано вручную</span>
+        <a href="#" class="foot-top">Наверх ↑</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Навигация: фон при прокрутке + прогресс-бар
+    (function () {
+      var nav = document.getElementById('nav');
+      var bar = document.getElementById('scroll-progress');
+      function onScroll() {
+        var y = window.scrollY || window.pageYOffset || 0;
+        if (nav) nav.classList.toggle('scrolled', y > 24);
+        if (bar) {
+          var h = document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+    })();
+
+    // Плавное появление при скролле
+    (function () {
+      if (REDUCED || !('IntersectionObserver' in window)) return;
+      var els = document.querySelectorAll('.reveal');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.08 });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+</body>
+</html>
