@@ -502,8 +502,15 @@
       padding: 9px 18px; border-radius: 10px; box-shadow: 0 8px 22px rgba(255,255,255,.28);
       transition: transform .15s ease, box-shadow .2s ease; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,255,255,.4); }
+    /* Переключатель языка */
+    .nav-right { display: inline-flex; align-items: center; gap: 14px; }
+    .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .lang-btn { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 6px 11px;
+      background: transparent; color: var(--muted); border: 0; cursor: pointer; transition: background .15s ease, color .15s ease; }
+    .lang-btn.active { background: var(--accent); color: #000; }
+    .lang-btn:not(.active):hover { color: var(--text); }
     @media (max-width: 760px) { .nav-links { display: none; } .nav-inner { padding: 14px 20px; } }
-    @media (max-width: 520px) { .brand .mono-sub { display: none; } }
+    @media (max-width: 520px) { .brand .mono-sub { display: none; } .nav-cta { display: none; } }
 
     /* Якоря не уходят под фиксированную панель */
     #services, #process, #catalog, #ideas, #otzyvy { scroll-margin-top: 88px; }
@@ -560,23 +567,148 @@
 </head>
 <body>
 
+  <!-- ===== i18n: словарь EN/RU + движок (приоритет — английский) ===== -->
+  <script>
+    window.I18N = {
+      en: {
+        brandMono: 'V', brandName: 'Vlad', brandFull: "Vlad<span class='mono-sub'> · web developer</span>",
+        navServices: 'Services', navProcess: 'Process', navCases: 'Cases', navIdeas: 'Ideas', navCatalog: 'Catalog', navReviews: 'Reviews', navCta: 'Get in touch',
+        heroKicker: 'Web developer', heroH1: "Hi, I'm <span>Vlad</span>.", heroTag: 'I build sites that <span>work</span>.',
+        heroLead: "Modern landing pages and turnkey sites that load instantly and look great on mobile. Drop me a line — let's talk about your project.",
+        heroBtn1: 'Get in touch', heroBtn2: 'View work',
+        statLaunchV: '3–7 days', statLaunchL: 'launch time', statRespV: '100%', statRespL: 'responsive', statLoadV: '<1 sec', statLoadL: 'load time',
+        svcEy: 'What I do', svcH2: 'Services', svcP: 'Full cycle: from the first call to a live, supported site.',
+        svc1H: 'On-brand', svc1P: 'Not a constructor template — design tailored to your niche, colors and goals.',
+        svc2H: 'Turnkey landings', svc2P: 'One-pagers that sell: a clear offer and a call-to-action button.',
+        svc3H: 'Responsive', svc3P: 'Flawless on phone, tablet and desktop — no extra setup.',
+        svc4H: 'Launch in 3–7 days', svc4P: 'From idea to a live site — days, not weeks.',
+        svc5H: 'Clean code & SEO', svc5P: 'Semantic markup, meta tags and speed — loved by people and search engines alike.',
+        prcEy: 'Process', prcH2: 'How I work', prcP: 'Tap a stage for details. Click the center to resume rotation.',
+        flgEy: 'Flagship', flgH2: 'Case in focus', flgH3: 'KAIRO —<br>agentic DeFi, 5 pages',
+        flgP: 'A dark, tech interface for a fintech platform: smooth animations, clear structure and fast loading. A site that looks pricier than its budget.',
+        flgBtn1: 'Open case', flgBtn2: 'All cases →',
+        ideaEy: 'Idea catalog', ideaH2: 'Design directions', ideaP: 'Hover a direction to see the mood. On mobile — tap a row.',
+        catEy: 'Catalog', catH2: 'Ready-made solutions', catDemo: 'Discuss a project', catMore: 'Learn more',
+        cat1Tag: 'Landing', cat1H: 'Turnkey landing', cat1P: 'A one-pager with a clear offer and a lead form. Perfect for quickly launching a service or product.', cat1Price: 'from 150 USDT',
+        cat2Tag: 'Store', cat2H: 'Online store', cat2P: 'Catalog, cart and online payment. Customers check out in a couple of taps right from their phone.', cat2Price: 'from 350 USDT',
+        cat3Tag: 'Business', cat3H: 'Corporate site', cat3P: 'A multi-page site about the company: services, cases, team and contacts. Solid, clear, on-brand.', cat3Price: 'from 300 USDT',
+        cat4Tag: 'SaaS', cat4H: 'SaaS landing', cat4P: 'A digital product showcase: pricing, features and a demo. A dark, tech interface with animation.', cat4Price: 'from 250 USDT',
+        cat5Tag: 'Booking', cat5H: 'Booking site', cat5P: 'Booking right on the site: barbershop, spa, clinic. Calendar, confirmation and reminders.', cat5Price: 'from 200 USDT',
+        cat6Tag: 'Portfolio', cat6H: 'Portfolio site', cat6P: 'A work showcase with animation and 3D scenes. So the project sticks from the first screen.', cat6Price: 'from 180 USDT',
+        revEy: 'Reviews', revH2: 'What clients say', revP: "Drag a card left or hit 'Next' to browse.", revNext: 'Next review →',
+        ctaH2: 'Ready to <span>launch</span> your site?', ctaP: "Write to me — we'll discuss the task, timeline and price. I reply fast.", ctaBtn: 'Get in touch',
+        footTagline: 'Turnkey sites and landings for business — fast, beautiful, on-brand.',
+        footSections: 'Sections', footContacts: 'Contacts', footCta: 'Discuss a project →', footCopyName: 'Vlad · Handcrafted', footTop: 'Top ↑',
+        vapor: ['Speed.', 'Aesthetics.', 'Results.'],
+        ideas: ['Dark luxe', 'Minimalism', '3D & motion', 'Brutalist', 'Gloss & spa'],
+        process: [
+          { t: 'Brief', step: 'Step 1', date: 'Done', desc: "We hop on a call and break down the task, audience and references. We lock the site's goal." },
+          { t: 'Design', step: 'Step 2', date: 'Done', desc: 'I assemble the structure and layout: what goes where, the offer, the screens.' },
+          { t: 'Build', step: 'Step 3', date: 'In progress', desc: 'Clean markup, animations, responsive for phone, tablet and desktop.' },
+          { t: 'Test', step: 'Step 4', date: 'Next', desc: 'I check on real devices, speed and links. I fix the small stuff.' },
+          { t: 'Launch', step: 'Step 5', date: 'Next', desc: 'Deploy, domain, analytics. Then — support and improvements.' }
+        ],
+        reviews: [
+          { in: 'AK', a: 'Anna K. · coffee shop', t: 'Built the coffee shop site in a week — leads came in from day one. Fast and to the point.' },
+          { in: 'DO', a: 'Dmitry O. · fitness', t: 'The gym got a fast, responsive site. Clients book right from their phones.' },
+          { in: 'MS', a: 'Marina S. · spa', t: 'The spa site looks expensive and loads instantly. Exactly the mood I wanted.' },
+          { in: 'IP', a: 'Igor P. · barbershop', t: 'Online booking works without a single bug. The admin panel is simple — figured it out myself.' },
+          { in: 'EV', a: 'Elena V. · store', t: "Explains clearly, fixes fast and doesn't vanish after launch. A rare find." },
+          { in: 'SK', a: 'Sergey K. · developer', t: 'Clean code and attention to detail. Handed the project to another dev — zero questions.' },
+          { in: 'ON', a: 'Olga N. · brand', t: 'The new landing converts twice as well as the old one. Paid off in the first month.' },
+          { in: 'PM', a: 'Pavel M. · auto service', t: 'Turnkey auto-service site — all clear and on time. Recommend without reservations.' }
+        ]
+      },
+      ru: {
+        brandMono: 'В', brandName: 'Влад', brandFull: "Влад<span class='mono-sub'> · веб-разработчик</span>",
+        navServices: 'Услуги', navProcess: 'Процесс', navCases: 'Кейсы', navIdeas: 'Идеи', navCatalog: 'Каталог', navReviews: 'Отзывы', navCta: 'Написать',
+        heroKicker: 'Веб-разработчик', heroH1: 'Привет, я <span>Влад</span>.', heroTag: 'Делаю сайты, которые <span>работают</span>.',
+        heroLead: 'Современные лендинги и сайты под ключ, которые загружаются мгновенно и хорошо выглядят на телефоне. Пиши — обсудим твой проект.',
+        heroBtn1: 'Написать мне', heroBtn2: 'Смотреть кейсы',
+        statLaunchV: '3–7 дней', statLaunchL: 'срок запуска', statRespV: '100%', statRespL: 'адаптив', statLoadV: '<1 сек', statLoadL: 'загрузка',
+        svcEy: 'Что я делаю', svcH2: 'Услуги', svcP: 'Полный цикл: от первого созвона до живого сайта с поддержкой.',
+        svc1H: 'Под твой бренд', svc1P: 'Не шаблон из конструктора — дизайн под твою нишу, цвета и задачи.',
+        svc2H: 'Лендинги под ключ', svc2P: 'Одностраничники, которые продают: чёткий оффер и кнопка действия.',
+        svc3H: 'Адаптив', svc3P: 'Идеально на телефоне, планшете и компьютере — без лишних настроек.',
+        svc4H: 'Запуск за 3–7 дней', svc4P: 'От идеи до живого сайта — считанные дни, а не недели.',
+        svc5H: 'Чистый код и SEO', svc5P: 'Семантичная вёрстка, метатеги и скорость — сайт любят и люди, и поисковики.',
+        prcEy: 'Процесс', prcH2: 'Как я работаю', prcP: 'Нажмите на этап — расскажу подробнее. Кликните по центру, чтобы вернуть вращение.',
+        flgEy: 'Флагман', flgH2: 'Кейс крупным планом', flgH3: 'KAIRO —<br>agentic DeFi на 5 страниц',
+        flgP: 'Тёмный технологичный интерфейс для финтех-платформы: плавные анимации, понятная структура и быстрая загрузка. Сайт, который выглядит дороже бюджета.',
+        flgBtn1: 'Открыть кейс', flgBtn2: 'Все кейсы →',
+        ideaEy: 'Каталог идей', ideaH2: 'Направления дизайна', ideaP: 'Наведите на направление — покажу настроение. На телефоне — тапните по строке.',
+        catEy: 'Каталог', catH2: 'Готовые решения', catDemo: 'Обсудить проект', catMore: 'Подробнее',
+        cat1Tag: 'Лендинг', cat1H: 'Лендинг под ключ', cat1P: 'Одностраничник с чётким оффером и формой заявки. Идеален, чтобы быстро запустить услугу или продукт.', cat1Price: 'от 150 USDT',
+        cat2Tag: 'Магазин', cat2H: 'Интернет-магазин', cat2P: 'Каталог, корзина и онлайн-оплата. Покупатель оформляет заказ за пару кликов прямо с телефона.', cat2Price: 'от 350 USDT',
+        cat3Tag: 'Бизнес', cat3H: 'Корпоративный сайт', cat3P: 'Многостраничник о компании: услуги, кейсы, команда и контакты. Солидно, понятно, под ваш бренд.', cat3Price: 'от 300 USDT',
+        cat4Tag: 'SaaS', cat4H: 'SaaS-лендинг', cat4P: 'Презентация цифрового продукта: тарифы, фичи и демо. Технологичный тёмный интерфейс с анимацией.', cat4Price: 'от 250 USDT',
+        cat5Tag: 'Booking', cat5H: 'Сайт с онлайн-записью', cat5P: 'Запись на услугу прямо с сайта: барбершоп, спа, клиника. Календарь, подтверждение и напоминания.', cat5Price: 'от 200 USDT',
+        cat6Tag: 'Портфолио', cat6H: 'Сайт-портфолио', cat6P: 'Витрина работ с анимацией и 3D-сценами. Чтобы проект запоминался уже с первого экрана.', cat6Price: 'от 180 USDT',
+        revEy: 'Отзывы', revH2: 'Что говорят клиенты', revP: 'Перетащите карточку влево или нажмите «Следующий», чтобы листать.', revNext: 'Следующий отзыв →',
+        ctaH2: 'Готовы <span>запустить</span> сайт?', ctaP: 'Напишите — обсудим задачу, сроки и стоимость. Отвечаю быстро.', ctaBtn: 'Написать мне',
+        footTagline: 'Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.',
+        footSections: 'Разделы', footContacts: 'Контакты', footCta: 'Обсудить проект →', footCopyName: 'Влад · Сделано вручную', footTop: 'Наверх ↑',
+        vapor: ['Скорость.', 'Эстетика.', 'Результат.'],
+        ideas: ['Тёмный люкс', 'Минимализм', '3D и анимация', 'Бруталист', 'Глянец и спа'],
+        process: [
+          { t: 'Бриф', step: 'Шаг 1', date: 'Готово', desc: 'Созваниваемся, разбираем задачу, аудиторию и примеры. Фиксируем цель сайта.' },
+          { t: 'Дизайн', step: 'Шаг 2', date: 'Готово', desc: 'Собираю структуру и макет: что и где, какой оффер, какие экраны.' },
+          { t: 'Разработка', step: 'Шаг 3', date: 'В работе', desc: 'Чистая вёрстка, анимации, адаптив под телефон, планшет и десктоп.' },
+          { t: 'Тест', step: 'Шаг 4', date: 'Далее', desc: 'Проверяю на реальных устройствах, скорость и ссылки. Правлю мелочи.' },
+          { t: 'Запуск', step: 'Шаг 5', date: 'Далее', desc: 'Деплой, домен, аналитика. Дальше — поддержка и доработки.' }
+        ],
+        reviews: [
+          { in: 'АК', a: 'Анна Ковалёва · кофейня', t: 'Сделал сайт кофейни за неделю — заявки пошли с первого дня. Всё быстро и по делу.' },
+          { in: 'ДО', a: 'Дмитрий Орлов · фитнес', t: 'Фитнес-клуб получил быстрый адаптивный сайт. Клиенты записываются прямо с телефона.' },
+          { in: 'МС', a: 'Марина Соколова · спа', t: 'Спа-сайт выглядит дорого и грузится мгновенно. Получила ровно ту атмосферу, что хотела.' },
+          { in: 'ИП', a: 'Игорь Петров · барбершоп', t: 'Онлайн-запись завелась без единого бага. Админка простая, разобрался сам.' },
+          { in: 'ЕВ', a: 'Елена Власова · магазин', t: 'Понятно объясняет, правит быстро и не пропадает после запуска. Большая редкость.' },
+          { in: 'СК', a: 'Сергей Кузнецов · разработчик', t: 'Чистый код и внимание к деталям. Передал проект другому — вопросов не возникло.' },
+          { in: 'ОН', a: 'Ольга Новикова · бренд', t: 'Новый лендинг конвертит в два раза лучше прежнего. Окупился за первый месяц.' },
+          { in: 'ПМ', a: 'Павел Морозов · автосервис', t: 'Сайт автосервиса под ключ — всё чётко и в срок. Рекомендую без оговорок.' }
+        ]
+      }
+    };
+    (function () {
+      var saved = localStorage.getItem('lang');
+      window.LANG = (saved === 'ru' || saved === 'en') ? saved : 'en'; // приоритет — английский
+      function apply(l) {
+        var d = window.I18N[l] || window.I18N.en;
+        document.documentElement.lang = l;
+        document.querySelectorAll('[data-i18n]').forEach(function (e) { var k = e.getAttribute('data-i18n'); if (d[k] != null) e.textContent = d[k]; });
+        document.querySelectorAll('[data-i18n-html]').forEach(function (e) { var k = e.getAttribute('data-i18n-html'); if (d[k] != null) e.innerHTML = d[k]; });
+        document.querySelectorAll('.lang-btn').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-lang') === l); });
+      }
+      window.setLang = function (l) { window.LANG = l; try { localStorage.setItem('lang', l); } catch (e) {} apply(l); document.dispatchEvent(new CustomEvent('langchange', { detail: l })); };
+      window.__applyI18n = apply;
+      document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.lang-btn'); if (b) window.setLang(b.getAttribute('data-lang')); });
+      document.addEventListener('DOMContentLoaded', function () { apply(window.LANG); });
+    })();
+  </script>
+
   <!-- ===== Прогресс прокрутки + навигация ===== -->
   <div id="scroll-progress" aria-hidden="true"></div>
-  <nav class="nav" id="nav" aria-label="Главное меню">
+  <nav class="nav" id="nav" aria-label="Main menu">
     <div class="nav-inner">
-      <a class="brand" href="#" aria-label="Влад — наверх">
-        <span class="mono">В</span>
-        <span>Влад<span class="mono-sub"> · веб-разработчик</span></span>
+      <a class="brand" href="#" aria-label="Vlad — back to top">
+        <span class="mono" data-i18n="brandMono">V</span>
+        <span data-i18n-html="brandFull">Vlad<span class="mono-sub"> · web developer</span></span>
       </a>
       <div class="nav-links">
-        <a href="#services">Услуги</a>
-        <a href="#process">Процесс</a>
-        <a href="cases.html">Кейсы</a>
-        <a href="#ideas">Идеи</a>
-        <a href="#catalog">Каталог</a>
-        <a href="#otzyvy">Отзывы</a>
+        <a href="#services" data-i18n="navServices">Services</a>
+        <a href="#process" data-i18n="navProcess">Process</a>
+        <a href="cases.html" data-i18n="navCases">Cases</a>
+        <a href="#ideas" data-i18n="navIdeas">Ideas</a>
+        <a href="#catalog" data-i18n="navCatalog">Catalog</a>
+        <a href="#otzyvy" data-i18n="navReviews">Reviews</a>
       </div>
-      <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com">Написать</a>
+      <div class="nav-right">
+        <div class="lang" role="group" aria-label="Language">
+          <button class="lang-btn" data-lang="en" type="button">EN</button>
+          <button class="lang-btn" data-lang="ru" type="button">RU</button>
+        </div>
+        <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com" data-i18n="navCta">Get in touch</a>
+      </div>
     </div>
   </nav>
 
@@ -597,18 +729,18 @@
       <div class="hero-hud">
         <div class="hud-block">
           <div class="hud-rule"><span class="ln sh"></span><span class="inf">∞</span><span class="ln"></span></div>
-          <span class="kicker"><span class="dot"></span>Веб-разработчик</span>
-          <h1>Привет, я <span>Влад</span>.</h1>
-          <p class="hero-tag">Делаю сайты, которые <span>работают</span>.</p>
-          <p class="lead">Современные лендинги и сайты под ключ, которые загружаются мгновенно и хорошо выглядят на телефоне. Пиши — обсудим твой проект.</p>
+          <span class="kicker"><span class="dot"></span><span data-i18n="heroKicker">Web developer</span></span>
+          <h1 data-i18n-html="heroH1">Hi, I'm <span>Vlad</span>.</h1>
+          <p class="hero-tag" data-i18n-html="heroTag">I build sites that <span>work</span>.</p>
+          <p class="lead" data-i18n="heroLead">Modern landing pages and turnkey sites that load instantly and look great on mobile. Drop me a line — let's talk about your project.</p>
           <div class="btns">
-            <a class="hud-btn" href="mailto:abramov.vladislaw@gmail.com">Написать мне</a>
-            <a class="hud-btn" href="cases.html">Смотреть кейсы</a>
+            <a class="hud-btn" href="mailto:abramov.vladislaw@gmail.com" data-i18n="heroBtn1">Get in touch</a>
+            <a class="hud-btn" href="cases.html" data-i18n="heroBtn2">View work</a>
           </div>
           <div class="hero-stats">
-            <div class="hstat"><b>3–7 дней</b><span>срок запуска</span></div>
-            <div class="hstat"><b>100%</b><span>адаптив</span></div>
-            <div class="hstat"><b>&lt;1 сек</b><span>загрузка</span></div>
+            <div class="hstat"><b data-i18n="statLaunchV">3–7 days</b><span data-i18n="statLaunchL">launch time</span></div>
+            <div class="hstat"><b data-i18n="statRespV">100%</b><span data-i18n="statRespL">responsive</span></div>
+            <div class="hstat"><b data-i18n="statLoadV">&lt;1 sec</b><span data-i18n="statLoadL">load time</span></div>
           </div>
         </div>
       </div>
@@ -645,37 +777,37 @@
     <!-- ===== Что я делаю — bento ===== -->
     <section class="reveal" id="services">
       <div class="section-head">
-        <div class="section-title">Что я делаю</div>
-        <h2>Услуги</h2>
-        <p>Полный цикл: от первого созвона до живого сайта с поддержкой.</p>
+        <div class="section-title" data-i18n="svcEy">What I do</div>
+        <h2 data-i18n="svcH2">Services</h2>
+        <p data-i18n="svcP">Full cycle: from the first call to a live, supported site.</p>
       </div>
       <div class="bento">
         <article class="bento-card b-c2">
           <div class="b-big">100%</div>
-          <h3>Под твой бренд</h3>
-          <p>Не шаблон из конструктора — дизайн под твою нишу, цвета и задачи.</p>
+          <h3 data-i18n="svc1H">On-brand</h3>
+          <p data-i18n="svc1P">Not a constructor template — design tailored to your niche, colors and goals.</p>
         </article>
         <article class="bento-card b-c2">
           <div class="b-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           </div>
-          <h3>Лендинги под ключ</h3>
-          <p>Одностраничники, которые продают: чёткий оффер и кнопка действия.</p>
+          <h3 data-i18n="svc2H">Turnkey landings</h3>
+          <p data-i18n="svc2P">One-pagers that sell: a clear offer and a call-to-action button.</p>
         </article>
         <article class="bento-card b-c2">
           <div class="b-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
           </div>
-          <h3>Адаптив</h3>
-          <p>Идеально на телефоне, планшете и компьютере — без лишних настроек.</p>
+          <h3 data-i18n="svc3H">Responsive</h3>
+          <p data-i18n="svc3P">Flawless on phone, tablet and desktop — no extra setup.</p>
         </article>
 
         <article class="bento-card b-c3">
           <div class="b-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8z"/></svg>
           </div>
-          <h3>Запуск за 3–7 дней</h3>
-          <p>От идеи до живого сайта — считанные дни, а не недели.</p>
+          <h3 data-i18n="svc4H">Launch in 3–7 days</h3>
+          <p data-i18n="svc4P">From idea to a live site — days, not weeks.</p>
           <svg class="b-spark" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true">
             <path class="area" d="M0 40 L40 34 L80 36 L120 22 L160 26 L200 12 L240 16 L300 4 L300 46 L0 46 Z"/>
             <path d="M0 40 L40 34 L80 36 L120 22 L160 26 L200 12 L240 16 L300 4"/>
@@ -685,8 +817,8 @@
           <div class="b-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
           </div>
-          <h3>Чистый код и SEO</h3>
-          <p>Семантичная вёрстка, метатеги и скорость — сайт любят и люди, и поисковики.</p>
+          <h3 data-i18n="svc5H">Clean code & SEO</h3>
+          <p data-i18n="svc5P">Semantic markup, meta tags and speed — loved by people and search engines alike.</p>
         </article>
       </div>
     </section>
@@ -694,9 +826,9 @@
     <!-- ===== Как я работаю — орбитальный таймлайн ===== -->
     <section class="reveal" id="process">
       <div class="section-head">
-        <div class="section-title">Процесс</div>
-        <h2>Как я работаю</h2>
-        <p>Нажмите на этап — расскажу подробнее. Кликните по центру, чтобы вернуть вращение.</p>
+        <div class="section-title" data-i18n="prcEy">Process</div>
+        <h2 data-i18n="prcH2">How I work</h2>
+        <p data-i18n="prcP">Tap a stage for details. Click the center to resume rotation.</p>
       </div>
       <div class="orbit">
         <div class="orbit-stage" id="orbit-stage">
@@ -719,16 +851,16 @@
     <!-- ===== Флагман — section with mockup ===== -->
     <section class="reveal">
       <div class="section-head">
-        <div class="section-title">Флагман</div>
-        <h2>Кейс крупным планом</h2>
+        <div class="section-title" data-i18n="flgEy">Flagship</div>
+        <h2 data-i18n="flgH2">Case in focus</h2>
       </div>
       <div class="mockup" id="mockup">
         <div class="m-text">
-          <h3>KAIRO —<br />agentic DeFi на 5 страниц</h3>
-          <p>Тёмный технологичный интерфейс для финтех-платформы: плавные анимации, понятная структура и быстрая загрузка. Сайт, который выглядит дороже бюджета.</p>
+          <h3 data-i18n-html="flgH3">KAIRO —<br />agentic DeFi, 5 pages</h3>
+          <p data-i18n="flgP">A dark, tech interface for a fintech platform: smooth animations, clear structure and fast loading. A site that looks pricier than its budget.</p>
           <div class="btns">
-            <a class="lqbtn" href="https://kairo-sixseven.vercel.app/" target="_blank" rel="noopener"><span class="lq-glass"></span><span class="lq-label">Открыть кейс</span></a>
-            <a class="lqbtn" href="cases.html"><span class="lq-glass"></span><span class="lq-label">Все кейсы →</span></a>
+            <a class="lqbtn" href="https://kairo-sixseven.vercel.app/" target="_blank" rel="noopener"><span class="lq-glass"></span><span class="lq-label" data-i18n="flgBtn1">Open case</span></a>
+            <a class="lqbtn" href="cases.html"><span class="lq-glass"></span><span class="lq-label" data-i18n="flgBtn2">All cases →</span></a>
           </div>
         </div>
         <div class="m-visual">
@@ -741,24 +873,24 @@
     <!-- ===== Каталог идей — hover-slider направлений (порт animated-slideshow) ===== -->
     <section class="reveal" id="ideas">
       <div class="section-head">
-        <div class="section-title">Каталог идей</div>
-        <h2>Направления дизайна</h2>
-        <p>Наведите на направление — покажу настроение. На телефоне — тапните по строке.</p>
+        <div class="section-title" data-i18n="ideaEy">Idea catalog</div>
+        <h2 data-i18n="ideaH2">Design directions</h2>
+        <p data-i18n="ideaP">Hover a direction to see the mood. On mobile — tap a row.</p>
       </div>
       <div class="hslider">
         <ul class="hs-list" id="hs-list">
-          <li><button class="hs-item" type="button"><span class="hs-text">Тёмный люкс</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Минимализм</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">3D и анимация</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Бруталист</span></button></li>
-          <li><button class="hs-item" type="button"><span class="hs-text">Глянец и спа</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Dark luxe</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Minimalism</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">3D &amp; motion</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Brutalist</span></button></li>
+          <li><button class="hs-item" type="button"><span class="hs-text">Gloss &amp; spa</span></button></li>
         </ul>
         <div class="hs-images" id="hs-images">
-          <img class="hs-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80" alt="Тёмный люкс — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Минимализм — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=900&q=80" alt="3D и анимация — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80" alt="Бруталист — настроение" loading="lazy" />
-          <img class="hs-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Глянец и спа — настроение" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80" alt="Dark luxe — mood" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Minimalism — mood" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=900&q=80" alt="3D & motion — mood" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=900&q=80" alt="Brutalist — mood" loading="lazy" />
+          <img class="hs-img" src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Gloss & spa — mood" loading="lazy" />
         </div>
       </div>
     </section>
@@ -767,10 +899,10 @@
     <section class="reveal" id="catalog">
       <div class="cat-head">
         <div class="section-head" style="margin-bottom:0">
-          <div class="section-title">Каталог</div>
-          <h2>Готовые решения</h2>
+          <div class="section-title" data-i18n="catEy">Catalog</div>
+          <h2 data-i18n="catH2">Ready-made solutions</h2>
           <a class="cat-demo" href="mailto:abramov.vladislaw@gmail.com">
-            Обсудить проект
+            <span data-i18n="catDemo">Discuss a project</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
           </a>
         </div>
@@ -789,67 +921,67 @@
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">Лендинг</span>
-                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=760&q=80" alt="Лендинг под ключ" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat1Tag">Landing</span>
+                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=760&q=80" alt="Turnkey landing" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>Лендинг под ключ</h3>
-              <p>Одностраничник с чётким оффером и формой заявки. Идеален, чтобы быстро запустить услугу или продукт.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 150 USDT</span></span>
+              <h3 data-i18n="cat1H">Turnkey landing</h3>
+              <p data-i18n="cat1P">A one-pager with a clear offer and a lead form. Perfect for quickly launching a service or product.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat1Price">from 150 USDT</span></span>
             </a>
           </li>
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">Магазин</span>
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=760&q=80" alt="Интернет-магазин" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat2Tag">Store</span>
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=760&q=80" alt="Online store" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>Интернет-магазин</h3>
-              <p>Каталог, корзина и онлайн-оплата. Покупатель оформляет заказ за пару кликов прямо с телефона.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 350 USDT</span></span>
+              <h3 data-i18n="cat2H">Online store</h3>
+              <p data-i18n="cat2P">Catalog, cart and online payment. Customers check out in a couple of taps right from their phone.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat2Price">from 350 USDT</span></span>
             </a>
           </li>
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">Бизнес</span>
-                <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=760&q=80" alt="Корпоративный сайт" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat3Tag">Business</span>
+                <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=760&q=80" alt="Corporate site" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>Корпоративный сайт</h3>
-              <p>Многостраничник о компании: услуги, кейсы, команда и контакты. Солидно, понятно, под ваш бренд.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 300 USDT</span></span>
+              <h3 data-i18n="cat3H">Corporate site</h3>
+              <p data-i18n="cat3P">A multi-page site about the company: services, cases, team and contacts. Solid, clear, on-brand.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat3Price">from 300 USDT</span></span>
             </a>
           </li>
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">SaaS</span>
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=760&q=80" alt="SaaS-лендинг" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat4Tag">SaaS</span>
+                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=760&q=80" alt="SaaS landing" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>SaaS-лендинг</h3>
-              <p>Презентация цифрового продукта: тарифы, фичи и демо. Технологичный тёмный интерфейс с анимацией.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 250 USDT</span></span>
+              <h3 data-i18n="cat4H">SaaS landing</h3>
+              <p data-i18n="cat4P">A digital product showcase: pricing, features and a demo. A dark, tech interface with animation.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat4Price">from 250 USDT</span></span>
             </a>
           </li>
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">Booking</span>
-                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=760&q=80" alt="Сайт с онлайн-записью" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat5Tag">Booking</span>
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=760&q=80" alt="Booking site" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>Сайт с онлайн-записью</h3>
-              <p>Запись на услугу прямо с сайта: барбершоп, спа, клиника. Календарь, подтверждение и напоминания.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 200 USDT</span></span>
+              <h3 data-i18n="cat5H">Booking site</h3>
+              <p data-i18n="cat5P">Booking right on the site: barbershop, spa, clinic. Calendar, confirmation and reminders.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat5Price">from 200 USDT</span></span>
             </a>
           </li>
           <li class="cat-item">
             <a class="cat-card" href="mailto:abramov.vladislaw@gmail.com">
               <div class="cat-thumb">
-                <span class="cat-tag">Портфолио</span>
-                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=760&q=80" alt="Сайт-портфолио" loading="lazy" onerror="this.style.display='none'" />
+                <span class="cat-tag" data-i18n="cat6Tag">Portfolio</span>
+                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=760&q=80" alt="Portfolio site" loading="lazy" onerror="this.style.display='none'" />
               </div>
-              <h3>Сайт-портфолио</h3>
-              <p>Витрина работ с анимацией и 3D-сценами. Чтобы проект запоминался уже с первого экрана.</p>
-              <span class="cat-more">Подробнее <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price">от 180 USDT</span></span>
+              <h3 data-i18n="cat6H">Portfolio site</h3>
+              <p data-i18n="cat6P">A work showcase with animation and 3D scenes. So the project sticks from the first screen.</p>
+              <span class="cat-more"><span data-i18n="catMore">Learn more</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg><span class="cat-price" data-i18n="cat6Price">from 180 USDT</span></span>
             </a>
           </li>
         </ul>
@@ -859,14 +991,14 @@
     <!-- ===== Отзывы — shuffle-колода ===== -->
     <section class="reveal" id="otzyvy">
       <div class="section-head">
-        <div class="section-title">Отзывы</div>
-        <h2>Что говорят клиенты</h2>
-        <p>Перетащите карточку влево или нажмите «Следующий», чтобы листать.</p>
+        <div class="section-title" data-i18n="revEy">Reviews</div>
+        <h2 data-i18n="revH2">What clients say</h2>
+        <p data-i18n="revP">Drag a card left or hit 'Next' to browse.</p>
       </div>
 
       <div class="shuffle-wrap">
         <div class="deck3" id="deck3"></div>
-        <button class="lqbtn" id="shuffle-next" type="button"><span class="lq-glass"></span><span class="lq-label">Следующий отзыв →</span></button>
+        <button class="lqbtn" id="shuffle-next" type="button"><span class="lq-glass"></span><span class="lq-label" data-i18n="revNext">Next review →</span></button>
       </div>
     </section>
 
@@ -879,10 +1011,10 @@
       <div class="fall-blur"></div>
     </div>
     <div class="cta-inner">
-      <h2>Готовы <span>запустить</span> сайт?</h2>
-      <p>Напишите — обсудим задачу, сроки и стоимость. Отвечаю быстро.</p>
+      <h2 data-i18n-html="ctaH2">Ready to <span>launch</span> your site?</h2>
+      <p data-i18n="ctaP">Write to me — we'll discuss the task, timeline and price. I reply fast.</p>
       <div class="btns">
-        <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label">Написать мне</span></a>
+        <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label" data-i18n="ctaBtn">Get in touch</span></a>
         <a class="ghbtn" href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener" aria-label="GitHub">
           <span class="gh-liquid"></span>
           <span class="gh-content">
@@ -898,31 +1030,31 @@
     <footer>
       <div class="foot-grid">
         <div class="foot-brand">
-          <a class="brand" href="#" aria-label="Влад — наверх">
-            <span class="mono">В</span>
-            <span>Влад</span>
+          <a class="brand" href="#" aria-label="Vlad — back to top">
+            <span class="mono" data-i18n="brandMono">V</span>
+            <span data-i18n="brandName">Vlad</span>
           </a>
-          <p>Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.</p>
+          <p data-i18n="footTagline">Turnkey sites and landings for business — fast, beautiful, on-brand.</p>
         </div>
-        <nav class="foot-col" aria-label="Разделы">
-          <span class="foot-h">Разделы</span>
-          <a href="#services">Услуги</a>
-          <a href="#process">Процесс</a>
-          <a href="cases.html">Кейсы</a>
-          <a href="#ideas">Идеи</a>
-          <a href="#catalog">Каталог</a>
-          <a href="#otzyvy">Отзывы</a>
+        <nav class="foot-col" aria-label="Sections">
+          <span class="foot-h" data-i18n="footSections">Sections</span>
+          <a href="#services" data-i18n="navServices">Services</a>
+          <a href="#process" data-i18n="navProcess">Process</a>
+          <a href="cases.html" data-i18n="navCases">Cases</a>
+          <a href="#ideas" data-i18n="navIdeas">Ideas</a>
+          <a href="#catalog" data-i18n="navCatalog">Catalog</a>
+          <a href="#otzyvy" data-i18n="navReviews">Reviews</a>
         </nav>
         <div class="foot-col">
-          <span class="foot-h">Контакты</span>
+          <span class="foot-h" data-i18n="footContacts">Contacts</span>
           <a href="mailto:abramov.vladislaw@gmail.com">abramov.vladislaw@gmail.com</a>
           <a href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener">GitHub</a>
-          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com">Обсудить проект →</a>
+          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com" data-i18n="footCta">Discuss a project →</a>
         </div>
       </div>
       <div class="foot-bottom">
-        <span>© <span id="year"></span> Влад · Сделано вручную</span>
-        <a href="#" class="foot-top">Наверх ↑</a>
+        <span>© <span id="year"></span> <span data-i18n="footCopyName">Vlad · Handcrafted</span></span>
+        <a href="#" class="foot-top" data-i18n="footTop">Top ↑</a>
       </div>
     </footer>
   </div>
@@ -1019,7 +1151,8 @@
       var canvas = document.getElementById('vapor');
       var fallback = document.getElementById('vapor-fallback');
       if (!canvas) return;
-      var texts = ['Скорость.', 'Эстетика.', 'Результат.'];
+      function curTexts() { return (window.I18N[window.LANG] || window.I18N.en).vapor; }
+      var texts = curTexts();
       var ctx = canvas.getContext('2d');
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       var wrap = canvas.parentElement;
@@ -1038,6 +1171,12 @@
         return;
       }
       if (fallback) fallback.style.display = 'none';
+
+      document.addEventListener('langchange', function () {
+        texts = curTexts();
+        idx = 0;
+        try { sample(texts[0]); state = 'show'; } catch (e) {}
+      });
 
       function sample(text) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1123,13 +1262,18 @@
     (function () {
       var stage = document.getElementById('orbit-stage');
       if (!stage) return;
-      var data = [
-        { t: 'Бриф', step: 'Шаг 1', badge: 'done', date: 'Готово', e: 100, rel: [1], desc: 'Созваниваемся, разбираем задачу, аудиторию и примеры. Фиксируем цель сайта.' },
-        { t: 'Дизайн', step: 'Шаг 2', badge: 'done', date: 'Готово', e: 90, rel: [0, 2], desc: 'Собираю структуру и макет: что и где, какой оффер, какие экраны.' },
-        { t: 'Разработка', step: 'Шаг 3', badge: 'prog', date: 'В работе', e: 65, rel: [1, 3], desc: 'Чистая вёрстка, анимации, адаптив под телефон, планшет и десктоп.' },
-        { t: 'Тест', step: 'Шаг 4', badge: 'pend', date: 'Далее', e: 35, rel: [2, 4], desc: 'Проверяю на реальных устройствах, скорость и ссылки. Правлю мелочи.' },
-        { t: 'Запуск', step: 'Шаг 5', badge: 'pend', date: 'Далее', e: 15, rel: [3], desc: 'Деплой, домен, аналитика. Дальше — поддержка и доработки.' }
+      var meta = [
+        { badge: 'done', e: 100, rel: [1] },
+        { badge: 'done', e: 90, rel: [0, 2] },
+        { badge: 'prog', e: 65, rel: [1, 3] },
+        { badge: 'pend', e: 35, rel: [2, 4] },
+        { badge: 'pend', e: 15, rel: [3] }
       ];
+      function buildData() {
+        var src = (window.I18N[window.LANG] || window.I18N.en).process;
+        return meta.map(function (m, i) { return { t: src[i].t, step: src[i].step, date: src[i].date, desc: src[i].desc, badge: m.badge, e: m.e, rel: m.rel }; });
+      }
+      var data = buildData();
       var icons = [
         '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/></svg>',
         '<svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 3h9l5 5v13H5z"/></svg>',
