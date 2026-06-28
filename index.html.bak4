@@ -39,42 +39,18 @@
     .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
     a { color: inherit; }
 
-    /* ===== HERO — иммерсивная 3D-сцена бегущего текста (порт 3d-animation на ваниль) ===== */
-    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; background: var(--bg2); }
-
-    .t3d { position: absolute; inset: 0; z-index: 0; overflow: hidden; perspective: 1000px; perspective-origin: 50% 48%; }
-    .t3d-bg { position: absolute; inset: -4%; background-size: cover; background-position: center;
-      opacity: .2; animation: t3d-brightness 16s ease-in-out infinite alternate; }
-    .t3d-hue { position: absolute; inset: 0; z-index: 1; mix-blend-mode: screen; opacity: .6; pointer-events: none;
-      background: radial-gradient(55% 60% at 50% 46%, rgba(124,108,255,.42), transparent 70%);
-      animation: t3d-hue 14s ease-in-out infinite; }
-    .t3d-scene { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform;
-      animation: t3d-zoom 26s ease-in-out infinite alternate; }
-    @keyframes t3d-zoom { 0% { transform: scale(1); } 100% { transform: scale(1.6); } }
-    @keyframes t3d-hue { 0%,100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(55deg); } }
-    @keyframes t3d-brightness { 0% { filter: saturate(.5) brightness(.5) contrast(1.05); } 100% { filter: saturate(.75) brightness(.8) contrast(1.25); } }
-
-    .wall { position: absolute; top: 50%; height: 230%; width: 58%; transform-style: preserve-3d;
-      display: flex; flex-direction: column; justify-content: center; gap: clamp(4px, 1.2vh, 16px); pointer-events: none; }
-    .wall-left  { left: 0;  transform: translateY(-50%) rotateY(42deg);  transform-origin: left center; }
-    .wall-right { right: 0; transform: translateY(-50%) rotateY(-42deg); transform-origin: right center; }
-    .wall .row { white-space: nowrap; font-family: var(--display); font-style: italic; font-weight: 600;
-      font-size: clamp(34px, 6vw, 84px); line-height: 1.04; color: rgba(238,241,246,.22);
-      text-shadow: 0 0 22px rgba(124,108,255,.14); animation: t3d-scroll 42s linear infinite; }
-    .wall .row.alt { animation-duration: 58s; animation-direction: reverse; color: rgba(167,139,250,.26); }
-    .wall .row b { font-weight: 600; color: rgba(167,139,250,.6); }
-    @keyframes t3d-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-    .t3d-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 40%; z-index: 1; pointer-events: none;
-      background: linear-gradient(0deg, var(--bg) 6%, rgba(124,108,255,.06) 42%, transparent 100%); }
-
-    .hero-veil { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    /* ===== HERO с шейдером ===== */
+    .hero { position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden; }
+    #shader-bg { position: absolute; inset: 0; z-index: 0; }
+    #shader-bg canvas { width: 100% !important; height: 100% !important; display: block; }
+    .hero-veil {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background:
-        linear-gradient(90deg, rgba(6,7,11,.94) 0%, rgba(6,7,11,.74) 42%, rgba(6,7,11,.18) 100%),
-        linear-gradient(0deg, var(--bg) 1%, transparent 26%),
-        radial-gradient(120% 80% at 16% 42%, rgba(6,7,11,.55), transparent 60%); }
-
-    .hero .wrap { position: relative; z-index: 3; width: 100%; }
+        radial-gradient(120% 90% at 20% 30%, rgba(10,11,16,.30), transparent 60%),
+        linear-gradient(90deg, rgba(10,11,16,.92) 0%, rgba(10,11,16,.78) 42%, rgba(10,11,16,.30) 100%),
+        linear-gradient(0deg, var(--bg) 2%, transparent 30%);
+    }
+    .hero .wrap { position: relative; z-index: 2; width: 100%; }
     .kicker {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
@@ -86,21 +62,11 @@
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
     h1 { font-family: var(--display); font-size: clamp(44px, 7.4vw, 76px); line-height: 1.0; font-weight: 600; letter-spacing: -.015em; }
     h1 span { font-style: italic; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    /* Статичный подзаголовок героя (typewriter заменён 3D-сценой) */
-    .hero-tag { font-family: var(--display); font-style: italic; font-size: clamp(21px, 3vw, 32px); font-weight: 500; margin-top: 14px; letter-spacing: -.005em; }
-    .hero-tag span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    @media (prefers-reduced-motion: reduce) {
-      .t3d-scene, .wall .row, .t3d-hue, .t3d-bg { animation: none; }
-    }
-    @media (max-width: 600px) {
-      .wall { width: 82%; height: 200%; }
-      .wall-left  { transform: translateY(-50%) rotateY(34deg); }
-      .wall-right { transform: translateY(-50%) rotateY(-34deg); }
-      .t3d-scene { opacity: .5; }
-      .hero-veil { background:
-        linear-gradient(0deg, var(--bg) 2%, rgba(6,7,11,.55) 38%, rgba(6,7,11,.35) 100%),
-        radial-gradient(120% 70% at 30% 38%, rgba(6,7,11,.5), transparent 65%); }
-    }
+    /* Typewriter подзаголовок героя */
+    .hero-type { font-family: var(--display); font-style: italic; font-size: clamp(21px, 3vw, 32px); font-weight: 500; margin-top: 16px; letter-spacing: -.005em; }
+    .hero-type .tw { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-type .caret { display: inline-block; width: 2px; height: 1em; vertical-align: -2px; margin-left: 2px; background: var(--accent); animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
     .lead { font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); max-width: 600px; margin-top: 18px; }
     .btns { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
     .btn {
@@ -425,6 +391,7 @@
       .reveal { opacity: 1; transform: none; transition: none; }
       .kicker .dot { animation: none; }
       .fall-layer { animation: none; }
+      .hero-type .caret { animation: none; }
       .nav, .nav-inner, .nav-links a::after, .nav-cta { transition: none; }
     }
 
@@ -550,32 +517,12 @@
 
   <!-- ===== HERO (про Влада) с шейдером на фоне ===== -->
   <header class="hero">
-    <div class="t3d" aria-hidden="true">
-      <div class="t3d-bg" style="background-image:url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1600&q=80')"></div>
-      <div class="t3d-hue"></div>
-      <div class="t3d-scene">
-        <div class="wall wall-left">
-          <div class="row">ЛЕНДИНГИ · <b>МАГАЗИНЫ</b> · SAAS · ЛЕНДИНГИ · <b>МАГАЗИНЫ</b> · SAAS · </div>
-          <div class="row alt">БЫСТРО · КРАСИВО · <b>ПОД БРЕНД</b> · БЫСТРО · КРАСИВО · <b>ПОД БРЕНД</b> · </div>
-          <div class="row">3D · АНИМАЦИЯ · <b>ЧИСТЫЙ КОД</b> · 3D · АНИМАЦИЯ · <b>ЧИСТЫЙ КОД</b> · </div>
-          <div class="row alt">ИДЕЯ → ДИЗАЙН → <b>ЗАПУСК</b> · ИДЕЯ → ДИЗАЙН → <b>ЗАПУСК</b> · </div>
-          <div class="row">САЙТЫ ПОД КЛЮЧ · <b>SEO</b> · САЙТЫ ПОД КЛЮЧ · <b>SEO</b> · </div>
-        </div>
-        <div class="wall wall-right">
-          <div class="row alt">3D · АНИМАЦИЯ · <b>ЧИСТЫЙ КОД</b> · 3D · АНИМАЦИЯ · <b>ЧИСТЫЙ КОД</b> · </div>
-          <div class="row">ЛЕНДИНГИ · <b>МАГАЗИНЫ</b> · SAAS · ЛЕНДИНГИ · <b>МАГАЗИНЫ</b> · SAAS · </div>
-          <div class="row alt">САЙТЫ ПОД КЛЮЧ · <b>SEO</b> · САЙТЫ ПОД КЛЮЧ · <b>SEO</b> · </div>
-          <div class="row">БЫСТРО · КРАСИВО · <b>ПОД БРЕНД</b> · БЫСТРО · КРАСИВО · <b>ПОД БРЕНД</b> · </div>
-          <div class="row alt">ИДЕЯ → ДИЗАЙН → <b>ЗАПУСК</b> · ИДЕЯ → ДИЗАЙН → <b>ЗАПУСК</b> · </div>
-        </div>
-      </div>
-      <div class="t3d-floor"></div>
-    </div>
+    <div id="shader-bg"></div>
     <div class="hero-veil"></div>
     <div class="wrap">
       <span class="kicker"><span class="dot"></span>Веб-разработчик</span>
       <h1>Привет, я <span>Влад</span>.</h1>
-      <p class="hero-tag">Делаю сайты, которые <span>работают</span>.</p>
+      <p class="hero-type">Делаю <span class="tw" id="tw"></span><span class="caret" aria-hidden="true"></span><br />для бизнеса.</p>
       <p class="lead">Современные лендинги и сайты под ключ, которые загружаются мгновенно и хорошо выглядят на телефоне. Пиши — обсудим твой проект.</p>
       <div class="btns">
         <a class="lqbtn" href="mailto:abramov.vladislaw@gmail.com"><span class="lq-glass"></span><span class="lq-label">Написать мне</span></a>
@@ -906,6 +853,8 @@
     </defs>
   </svg>
 
+  <!-- Three.js для шейдера + Spline-viewer для 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <!-- Embla Carousel для каталога решений (порт gallery6) -->
   <script src="https://unpkg.com/embla-carousel@8.3.0/embla-carousel.umd.js"></script>
   <script>
@@ -947,6 +896,87 @@
         });
       }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
       secs.forEach(function (s) { io.observe(s); });
+    })();
+
+    // ===== Typewriter в герое =====
+    (function () {
+      var el = document.getElementById('tw');
+      if (!el) return;
+      var words = ['быстрые сайты', 'продающие лендинги', 'удобные магазины', 'сайты под ключ'];
+      if (REDUCED) { el.textContent = words[0]; return; }
+      var wi = 0, ci = 0, deleting = false;
+      function tick() {
+        var w = words[wi];
+        el.textContent = w.slice(0, ci);
+        if (!deleting) {
+          if (ci < w.length) { ci++; setTimeout(tick, 70); }
+          else { deleting = true; setTimeout(tick, 1500); }
+        } else {
+          if (ci > 0) { ci--; setTimeout(tick, 35); }
+          else { deleting = false; wi = (wi + 1) % words.length; setTimeout(tick, 250); }
+        }
+      }
+      tick();
+    })();
+
+    // ===== Шейдер-фон (Three.js) =====
+    (function () {
+      if (typeof THREE === 'undefined') return;
+      var container = document.getElementById('shader-bg');
+      if (!container) return;
+
+      var vertexShader = 'void main(){ gl_Position = vec4( position, 1.0 ); }';
+      var fragmentShader = [
+        '#define TWO_PI 6.2831853072',
+        '#define PI 3.14159265359',
+        'precision highp float;',
+        'uniform vec2 resolution;',
+        'uniform float time;',
+        'void main(void) {',
+        '  vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);',
+        '  float t = time*0.05;',
+        '  float lineWidth = 0.002;',
+        '  float v = 0.0;',
+        '  for(int j = 0; j < 3; j++){',
+        '    for(int i=0; i < 5; i++){',
+        '      v += lineWidth*float(i*i) / abs(fract(t - 0.01*float(j)+float(i)*0.01)*5.0 - length(uv) + mod(uv.x+uv.y, 0.2));',
+        '    }',
+        '  }',
+        '  v *= 0.45;',
+        '  vec3 col = v * vec3(0.486, 0.424, 1.0) + v*v*0.20*vec3(0.655, 0.545, 0.98);',
+        '  gl_FragColor = vec4(col, 1.0);',
+        '}'
+      ].join('\n');
+
+      var camera = new THREE.Camera();
+      camera.position.z = 1;
+      var scene = new THREE.Scene();
+      var geometry = new THREE.PlaneGeometry(2, 2);
+      var uniforms = {
+        time: { type: 'f', value: 1.0 },
+        resolution: { type: 'v2', value: new THREE.Vector2() }
+      };
+      var material = new THREE.ShaderMaterial({ uniforms: uniforms, vertexShader: vertexShader, fragmentShader: fragmentShader });
+      scene.add(new THREE.Mesh(geometry, material));
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      function onResize() {
+        var w = container.clientWidth, h = container.clientHeight;
+        renderer.setSize(w, h);
+        uniforms.resolution.value.x = renderer.domElement.width;
+        uniforms.resolution.value.y = renderer.domElement.height;
+      }
+      onResize();
+      window.addEventListener('resize', onResize, false);
+
+      (function animate() {
+        requestAnimationFrame(animate);
+        uniforms.time.value += 0.05;
+        renderer.render(scene, camera);
+      })();
     })();
 
     // ===== Vaporize-текст (порт на canvas) =====
