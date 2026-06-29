@@ -1328,6 +1328,17 @@
       document.getElementById('orbit-center').addEventListener('click', function (e) { e.stopPropagation(); reset(); });
       stage.addEventListener('click', reset);
 
+      document.addEventListener('langchange', function () {
+        data = buildData();
+        nodes.forEach(function (n, i) { var lbl = n.querySelector('.o-label'); if (lbl) lbl.textContent = data[i].t; });
+        if (active != null) {
+          var d = data[active];
+          ocBadge.textContent = d.date;
+          ocBadge.className = 'oc-badge' + (d.badge === 'done' ? ' done' : d.badge === 'prog' ? ' prog' : '');
+          ocStep.textContent = d.step; ocTitle.textContent = d.t; ocText.textContent = d.desc;
+        }
+      });
+
       layout();
       if (!REDUCED) {
         (function spin() { if (auto) { angle = (angle + 0.25) % 360; layout(); } requestAnimationFrame(spin); })();
@@ -1350,16 +1361,8 @@
       var deck = document.getElementById('deck3');
       var nextBtn = document.getElementById('shuffle-next');
       if (!deck) return;
-      var items = [
-        { in: 'АК', a: 'Анна Ковалёва · кофейня', c1: '#ffffff', c2: '#cfcfcf', t: 'Сделал сайт кофейни за неделю — заявки пошли с первого дня. Всё быстро и по делу.' },
-        { in: 'ДО', a: 'Дмитрий Орлов · фитнес', c1: '#22c55e', c2: '#15803d', t: 'Фитнес-клуб получил быстрый адаптивный сайт. Клиенты записываются прямо с телефона.' },
-        { in: 'МС', a: 'Марина Соколова · спа', c1: '#cfcfcf', c2: '#7c3aed', t: 'Спа-сайт выглядит дорого и грузится мгновенно. Получила ровно ту атмосферу, что хотела.' },
-        { in: 'ИП', a: 'Игорь Петров · барбершоп', c1: '#38bdf8', c2: '#0369a1', t: 'Онлайн-запись завелась без единого бага. Админка простая, разобрался сам.' },
-        { in: 'ЕВ', a: 'Елена Власова · магазин', c1: '#fb7185', c2: '#be123c', t: 'Понятно объясняет, правит быстро и не пропадает после запуска. Большая редкость.' },
-        { in: 'СК', a: 'Сергей Кузнецов · разработчик', c1: '#cfcfcf', c2: '#ca8a04', t: 'Чистый код и внимание к деталям. Передал проект другому — вопросов не возникло.' },
-        { in: 'ОН', a: 'Ольга Новикова · бренд', c1: '#34d399', c2: '#0f766e', t: 'Новый лендинг конвертит в два раза лучше прежнего. Окупился за первый месяц.' },
-        { in: 'ПМ', a: 'Павел Морозов · автосервис', c1: '#f472b6', c2: '#9d174d', t: 'Сайт автосервиса под ключ — всё чётко и в срок. Рекомендую без оговорок.' }
-      ];
+      function REV() { return (window.I18N[window.LANG] || window.I18N.en).reviews; }
+      var items = REV();
       var order = items.map(function (_, i) { return i; });
       var POS = [
         { z: 3, rot: -6, x: 0 },
@@ -1377,7 +1380,7 @@
           el.style.zIndex = pos.z;
           el.style.transform = 'translateX(' + pos.x + '%) rotate(' + pos.rot + 'deg)';
           el.innerHTML =
-            '<span class="s-av" style="--c1:' + it.c1 + ';--c2:' + it.c2 + '">' + it.in + '</span>' +
+            '<span class="s-av">' + it.in + '</span>' +
             '<p class="s-text">«' + it.t + '»</p>' +
             '<span class="s-author">' + it.a + '</span>';
           deck.appendChild(el);
@@ -1408,6 +1411,7 @@
         });
       }
       if (nextBtn) nextBtn.addEventListener('click', shuffle);
+      document.addEventListener('langchange', function () { items = REV(); build(); });
       build();
     })();
 
@@ -1462,11 +1466,14 @@
       var imgs = Array.prototype.slice.call(wrap.querySelectorAll('.hs-img'));
 
       // Разбиваем каждую строку на символы с двумя слоями (тусклый + проявляющийся).
-      items.forEach(function (item) {
+      var current = 0;
+      function titles() { return (window.I18N[window.LANG] || window.I18N.en).ideas; }
+      function buildChars() {
+      var t = titles();
+      items.forEach(function (item, ix) {
         var span = item.querySelector('.hs-text');
-        var text = span.textContent;
         span.textContent = '';
-        text.split('').forEach(function (ch, i) {
+        (t[ix] || '').split('').forEach(function (ch, i) {
           var glyph = ch === ' ' ? ' ' : ch;
           var c = document.createElement('span'); c.className = 'hs-char';
           var dim = document.createElement('span'); dim.className = 'c-dim'; dim.textContent = glyph;
@@ -1477,8 +1484,10 @@
           span.appendChild(c);
         });
       });
+      }
 
       function setActive(idx) {
+        current = idx;
         items.forEach(function (it, i) { it.classList.toggle('active', i === idx); });
         imgs.forEach(function (im, i) { im.classList.toggle('active', i === idx); });
       }
@@ -1487,6 +1496,8 @@
         it.addEventListener('focus', function () { setActive(i); });
         it.addEventListener('click', function () { setActive(i); }); // тап на мобильном
       });
+      document.addEventListener('langchange', function () { buildChars(); setActive(current); });
+      buildChars();
       setActive(0);
     })();
 

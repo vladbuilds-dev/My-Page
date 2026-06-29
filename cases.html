@@ -71,6 +71,12 @@
       padding: 9px 18px; border-radius: 10px; box-shadow: 0 8px 22px rgba(255,255,255,.28);
       transition: transform .15s ease, box-shadow .2s ease; }
     .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,255,255,.4); }
+    .nav-right { display: inline-flex; align-items: center; gap: 14px; }
+    .lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+    .lang-btn { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; padding: 6px 11px;
+      background: transparent; color: var(--muted); border: 0; cursor: pointer; transition: background .15s ease, color .15s ease; }
+    .lang-btn.active { background: var(--accent); color: #000; }
+    .lang-btn:not(.active):hover { color: var(--text); }
     @media (max-width: 760px) { .nav-links { display: none; } .nav-inner { padding: 14px 20px; } }
     @media (max-width: 520px) { .brand .mono-sub { display: none; } }
 
@@ -174,36 +180,100 @@
 </head>
 <body>
 
+  <!-- ===== i18n: словарь EN/RU + движок (приоритет — английский) ===== -->
+  <script>
+    window.I18N = {
+      en: {
+        brandMono: 'V', brandName: 'Vlad', brandFull: "Vlad<span class='mono-sub'> · web developer</span>",
+        navServices: 'Services', navProcess: 'Process', navCases: 'Cases', navIdeas: 'Ideas', navCatalog: 'Catalog', navReviews: 'Reviews', navCta: 'Get in touch',
+        footTagline: 'Turnkey sites and landings for business — fast, beautiful, on-brand.',
+        footSections: 'Sections', footContacts: 'Contacts', footCta: 'Discuss a project →', footCopyName: 'Vlad · Handcrafted', footTop: 'Top ↑',
+        cBack: '← Home', cKicker: 'Portfolio', cH1: "Live <span class='it'>cases</span>",
+        cLead: 'Turnkey sites and landings — from a barbershop to a DeFi platform. Open and touch each project right now.',
+        cStat1V: '8', cStat1L: 'projects', cStat2V: '6', cStat2L: 'niches', cStat3V: '100%', cStat3L: 'responsive', pcardOpen: 'Open',
+        haloSub: 'Photo studio · booking', haloBadge: 'New',
+        meridianSub: 'Design studio · multipage', meridianBadge: 'Studio',
+        cadenceSub: 'SaaS for developers · landing', cadenceBadge: 'SaaS',
+        kairoSub: 'Agentic DeFi · 5 pages', kairoBadge: 'DeFi',
+        spaSub: 'Quiet-luxury spa · 4 pages', spaBadge: 'Spa',
+        granSub: 'Barbershop · online booking', granBadge: 'Booking',
+        afitSub: 'Fitness club · catalog', afitBadge: 'Multipage',
+        teplySub: 'Coffee shop · drink builder', teplyBadge: 'Coffee',
+        cCtaH2: "Want a <span class='it'>project</span> like this?", cCtaP: "Write to me — we'll discuss the task, timeline and price. I reply fast.",
+        cCtaBtn1: 'Get in touch', cCtaBtn2: 'Back to home'
+      },
+      ru: {
+        brandMono: 'В', brandName: 'Влад', brandFull: "Влад<span class='mono-sub'> · веб-разработчик</span>",
+        navServices: 'Услуги', navProcess: 'Процесс', navCases: 'Кейсы', navIdeas: 'Идеи', navCatalog: 'Каталог', navReviews: 'Отзывы', navCta: 'Написать',
+        footTagline: 'Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.',
+        footSections: 'Разделы', footContacts: 'Контакты', footCta: 'Обсудить проект →', footCopyName: 'Влад · Сделано вручную', footTop: 'Наверх ↑',
+        cBack: '← На главную', cKicker: 'Портфолио', cH1: "Живые <span class='it'>кейсы</span>",
+        cLead: 'Сайты и лендинги под ключ — от барбершопа до DeFi-платформы. Каждый проект можно открыть и потрогать прямо сейчас.',
+        cStat1V: '8', cStat1L: 'проектов', cStat2V: '6', cStat2L: 'ниш', cStat3V: '100%', cStat3L: 'адаптив', pcardOpen: 'Открыть',
+        haloSub: 'Фотостудия · бронирование', haloBadge: 'Новое',
+        meridianSub: 'Дизайн-студия · многостр.', meridianBadge: 'Студия',
+        cadenceSub: 'SaaS для разработчиков · лендинг', cadenceBadge: 'SaaS',
+        kairoSub: 'Agentic DeFi · 5 страниц', kairoBadge: 'DeFi',
+        spaSub: 'Спа тихой роскоши · 4 страницы', spaBadge: 'Спа',
+        granSub: 'Барбершоп · запись онлайн', granBadge: 'Запись',
+        afitSub: 'Фитнес-клуб · каталог', afitBadge: 'Многостр.',
+        teplySub: 'Кофейня · конструктор напитков', teplyBadge: 'Кофейня',
+        cCtaH2: "Хочешь <span class='it'>такой же</span> проект?", cCtaP: 'Напишите — обсудим задачу, сроки и стоимость. Отвечаю быстро.',
+        cCtaBtn1: 'Написать мне', cCtaBtn2: 'Вернуться на главную'
+      }
+    };
+    (function () {
+      var saved = localStorage.getItem('lang');
+      window.LANG = (saved === 'ru' || saved === 'en') ? saved : 'en';
+      function apply(l) {
+        var d = window.I18N[l] || window.I18N.en;
+        document.documentElement.lang = l;
+        document.querySelectorAll('[data-i18n]').forEach(function (e) { var k = e.getAttribute('data-i18n'); if (d[k] != null) e.textContent = d[k]; });
+        document.querySelectorAll('[data-i18n-html]').forEach(function (e) { var k = e.getAttribute('data-i18n-html'); if (d[k] != null) e.innerHTML = d[k]; });
+        document.querySelectorAll('.lang-btn').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-lang') === l); });
+      }
+      window.setLang = function (l) { window.LANG = l; try { localStorage.setItem('lang', l); } catch (e) {} apply(l); };
+      document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.lang-btn'); if (b) window.setLang(b.getAttribute('data-lang')); });
+      document.addEventListener('DOMContentLoaded', function () { apply(window.LANG); });
+    })();
+  </script>
+
   <div id="scroll-progress" aria-hidden="true"></div>
-  <nav class="nav" id="nav" aria-label="Главное меню">
+  <nav class="nav" id="nav" aria-label="Main menu">
     <div class="nav-inner">
-      <a class="brand" href="index.html" aria-label="Влад — на главную">
-        <span class="mono">В</span>
-        <span>Влад<span class="mono-sub"> · веб-разработчик</span></span>
+      <a class="brand" href="index.html" aria-label="Vlad — home">
+        <span class="mono" data-i18n="brandMono">V</span>
+        <span data-i18n-html="brandFull">Vlad<span class="mono-sub"> · web developer</span></span>
       </a>
       <div class="nav-links">
-        <a href="index.html#services">Услуги</a>
-        <a href="index.html#process">Процесс</a>
-        <a href="cases.html" class="active" aria-current="page">Кейсы</a>
-        <a href="index.html#ideas">Идеи</a>
-        <a href="index.html#catalog">Каталог</a>
-        <a href="index.html#otzyvy">Отзывы</a>
+        <a href="index.html#services" data-i18n="navServices">Services</a>
+        <a href="index.html#process" data-i18n="navProcess">Process</a>
+        <a href="cases.html" class="active" aria-current="page" data-i18n="navCases">Cases</a>
+        <a href="index.html#ideas" data-i18n="navIdeas">Ideas</a>
+        <a href="index.html#catalog" data-i18n="navCatalog">Catalog</a>
+        <a href="index.html#otzyvy" data-i18n="navReviews">Reviews</a>
       </div>
-      <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com">Написать</a>
+      <div class="nav-right">
+        <div class="lang" role="group" aria-label="Language">
+          <button class="lang-btn" data-lang="en" type="button">EN</button>
+          <button class="lang-btn" data-lang="ru" type="button">RU</button>
+        </div>
+        <a class="nav-cta" href="mailto:abramov.vladislaw@gmail.com" data-i18n="navCta">Get in touch</a>
+      </div>
     </div>
   </nav>
 
   <!-- ===== Шапка страницы ===== -->
   <header class="cases-hero">
     <div class="wrap">
-      <a class="back-link" href="index.html">← На главную</a>
-      <span class="kicker"><span class="dot"></span>Портфолио</span>
-      <h1>Живые <span class="it">кейсы</span></h1>
-      <p class="lead">Сайты и лендинги под ключ — от барбершопа до DeFi-платформы. Каждый проект можно открыть и потрогать прямо сейчас.</p>
+      <a class="back-link" href="index.html" data-i18n="cBack">← Home</a>
+      <span class="kicker"><span class="dot"></span><span data-i18n="cKicker">Portfolio</span></span>
+      <h1 data-i18n-html="cH1">Live <span class="it">cases</span></h1>
+      <p class="lead" data-i18n="cLead">Turnkey sites and landings — from a barbershop to a DeFi platform. Open and touch each project right now.</p>
       <div class="hero-stats">
-        <div class="hstat"><b>8</b><span>проектов</span></div>
-        <div class="hstat"><b>6</b><span>ниш</span></div>
-        <div class="hstat"><b>100%</b><span>адаптив</span></div>
+        <div class="hstat"><b data-i18n="cStat1V">8</b><span data-i18n="cStat1L">projects</span></div>
+        <div class="hstat"><b data-i18n="cStat2V">6</b><span data-i18n="cStat2L">niches</span></div>
+        <div class="hstat"><b data-i18n="cStat3V">100%</b><span data-i18n="cStat3L">responsive</span></div>
       </div>
     </div>
   </header>
@@ -218,11 +288,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>HALO</h3><p>Фотостудия · бронирование</p></div>
-              <span class="pcard-badge">Новое</span>
+              <div><h3>HALO</h3><p data-i18n="haloSub">Photo studio · booking</p></div>
+              <span class="pcard-badge" data-i18n="haloBadge">New</span>
             </div>
             <div class="pcard-price">180–350 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -231,11 +301,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>Meridian</h3><p>Дизайн-студия · многостр.</p></div>
-              <span class="pcard-badge">Студия</span>
+              <div><h3>Meridian</h3><p data-i18n="meridianSub">Design studio · multipage</p></div>
+              <span class="pcard-badge" data-i18n="meridianBadge">Studio</span>
             </div>
             <div class="pcard-price">250–450 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -244,11 +314,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>Cadence</h3><p>SaaS для разработчиков · лендинг</p></div>
-              <span class="pcard-badge">SaaS</span>
+              <div><h3>Cadence</h3><p data-i18n="cadenceSub">SaaS for developers · landing</p></div>
+              <span class="pcard-badge" data-i18n="cadenceBadge">SaaS</span>
             </div>
             <div class="pcard-price">180–350 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -257,11 +327,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>KAIRO</h3><p>Agentic DeFi · 5 страниц</p></div>
-              <span class="pcard-badge">DeFi</span>
+              <div><h3>KAIRO</h3><p data-i18n="kairoSub">Agentic DeFi · 5 pages</p></div>
+              <span class="pcard-badge" data-i18n="kairoBadge">DeFi</span>
             </div>
             <div class="pcard-price">250–500 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -270,11 +340,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>Spa Gold</h3><p>Спа тихой роскоши · 4 страницы</p></div>
-              <span class="pcard-badge">Спа</span>
+              <div><h3>Spa Gold</h3><p data-i18n="spaSub">Quiet-luxury spa · 4 pages</p></div>
+              <span class="pcard-badge" data-i18n="spaBadge">Spa</span>
             </div>
             <div class="pcard-price">150–300 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -283,11 +353,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>Грань</h3><p>Барбершоп · запись онлайн</p></div>
-              <span class="pcard-badge">Запись</span>
+              <div><h3>Грань</h3><p data-i18n="granSub">Barbershop · online booking</p></div>
+              <span class="pcard-badge" data-i18n="granBadge">Booking</span>
             </div>
             <div class="pcard-price">120–250 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -296,11 +366,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>A-FIT</h3><p>Фитнес-клуб · каталог</p></div>
-              <span class="pcard-badge">Многостр.</span>
+              <div><h3>A-FIT</h3><p data-i18n="afitSub">Fitness club · catalog</p></div>
+              <span class="pcard-badge" data-i18n="afitBadge">Multipage</span>
             </div>
             <div class="pcard-price">180–350 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -309,11 +379,11 @@
           <div class="pcard-veil"></div>
           <div class="pcard-content">
             <div class="pcard-head">
-              <div><h3>Тёплый угол</h3><p>Кофейня · конструктор напитков</p></div>
-              <span class="pcard-badge">Кофейня</span>
+              <div><h3>Тёплый угол</h3><p data-i18n="teplySub">Coffee shop · drink builder</p></div>
+              <span class="pcard-badge" data-i18n="teplyBadge">Coffee</span>
             </div>
             <div class="pcard-price">100–200 USDT</div>
-            <span class="pcard-open">Открыть <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+            <span class="pcard-open"><span data-i18n="pcardOpen">Open</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
           </div>
         </a>
 
@@ -323,11 +393,11 @@
 
   <!-- ===== CTA ===== -->
   <section class="cta">
-    <h2>Хочешь <span class="it">такой же</span> проект?</h2>
-    <p>Напишите — обсудим задачу, сроки и стоимость. Отвечаю быстро.</p>
+    <h2 data-i18n-html="cCtaH2">Want a <span class="it">project</span> like this?</h2>
+    <p data-i18n="cCtaP">Write to me — we'll discuss the task, timeline and price. I reply fast.</p>
     <div class="btns">
-      <a class="btn btn-primary" href="mailto:abramov.vladislaw@gmail.com">Написать мне</a>
-      <a class="btn btn-ghost" href="index.html">Вернуться на главную</a>
+      <a class="btn btn-primary" href="mailto:abramov.vladislaw@gmail.com" data-i18n="cCtaBtn1">Get in touch</a>
+      <a class="btn btn-ghost" href="index.html" data-i18n="cCtaBtn2">Back to home</a>
     </div>
   </section>
 
@@ -335,31 +405,31 @@
     <footer>
       <div class="foot-grid">
         <div class="foot-brand">
-          <a class="brand" href="index.html" aria-label="Влад — на главную">
-            <span class="mono">В</span>
-            <span>Влад</span>
+          <a class="brand" href="index.html" aria-label="Vlad — home">
+            <span class="mono" data-i18n="brandMono">V</span>
+            <span data-i18n="brandName">Vlad</span>
           </a>
-          <p>Сайты и лендинги под ключ для бизнеса — быстро, красиво, под твой бренд.</p>
+          <p data-i18n="footTagline">Turnkey sites and landings for business — fast, beautiful, on-brand.</p>
         </div>
-        <nav class="foot-col" aria-label="Разделы">
-          <span class="foot-h">Разделы</span>
-          <a href="index.html#services">Услуги</a>
-          <a href="index.html#process">Процесс</a>
-          <a href="cases.html">Кейсы</a>
-          <a href="index.html#ideas">Идеи</a>
-          <a href="index.html#catalog">Каталог</a>
-          <a href="index.html#otzyvy">Отзывы</a>
+        <nav class="foot-col" aria-label="Sections">
+          <span class="foot-h" data-i18n="footSections">Sections</span>
+          <a href="index.html#services" data-i18n="navServices">Services</a>
+          <a href="index.html#process" data-i18n="navProcess">Process</a>
+          <a href="cases.html" data-i18n="navCases">Cases</a>
+          <a href="index.html#ideas" data-i18n="navIdeas">Ideas</a>
+          <a href="index.html#catalog" data-i18n="navCatalog">Catalog</a>
+          <a href="index.html#otzyvy" data-i18n="navReviews">Reviews</a>
         </nav>
         <div class="foot-col">
-          <span class="foot-h">Контакты</span>
+          <span class="foot-h" data-i18n="footContacts">Contacts</span>
           <a href="mailto:abramov.vladislaw@gmail.com">abramov.vladislaw@gmail.com</a>
           <a href="https://github.com/vladbuilds-dev" target="_blank" rel="noopener">GitHub</a>
-          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com">Обсудить проект →</a>
+          <a class="foot-cta" href="mailto:abramov.vladislaw@gmail.com" data-i18n="footCta">Discuss a project →</a>
         </div>
       </div>
       <div class="foot-bottom">
-        <span>© <span id="year"></span> Влад · Сделано вручную</span>
-        <a href="#" class="foot-top">Наверх ↑</a>
+        <span>© <span id="year"></span> <span data-i18n="footCopyName">Vlad · Handcrafted</span></span>
+        <a href="#" class="foot-top" data-i18n="footTop">Top ↑</a>
       </div>
     </footer>
   </div>
